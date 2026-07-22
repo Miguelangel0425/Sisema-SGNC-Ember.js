@@ -1,6 +1,7 @@
 import { pageTitle } from 'ember-page-title';
 import { LinkTo } from '@ember/routing';
-
+import AlertasContenedor from '../components/alertas-contenedor';
+import ConfirmacionModal from '../components/confirmacion-modal';
 <template>
   {{pageTitle "Sistema de Notas Conceptuales 2026"}}
 
@@ -49,4 +50,6 @@ import { LinkTo } from '@ember/routing';
       </main>
     </div>
   </div>
+  <AlertasContenedor />
+  <ConfirmacionModal />
 </template>

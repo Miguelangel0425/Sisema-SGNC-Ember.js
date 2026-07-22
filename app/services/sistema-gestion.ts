@@ -73,6 +73,20 @@ export default class SistemaGestionService extends Service {
       notasRegistradas: notas.filter((n) => n.estado === EstadoNota.REGISTRADA).length,
     };
   }
+
+  /** "Toca" el array para forzar que Ember re-renderice todo lo que dependa de él,
+ *  incluidos cambios en objetos anidados (cronograma, presupuesto, etc.) que no son @tracked. */
+  tocarNotas(): void {
+    this.notasConceptuales = [...this.notasConceptuales];
+  }
+
+  tocarConvocatorias(): void {
+    this.convocatorias = [...this.convocatorias];
+  }
+
+  tocarDirectores(): void {
+    this.directores = [...this.directores];
+  }
 }
 
 // Don't remove this declaration: this is what enables TypeScript to resolve
