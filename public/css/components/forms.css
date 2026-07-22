@@ -28,7 +28,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(11, 61, 99, 0.12);
+  box-shadow: 0 0 0 3px rgb(11 61 99 / 12%);
 }
 
 .campo-invalido {

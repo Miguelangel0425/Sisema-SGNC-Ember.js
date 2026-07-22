@@ -1,18 +1,15 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
-@import "base/variables.css";
-@import "base/reset.css";
-@import "base/typography.css";
-
-@import "layout/grid.css";
-@import "layout/sidebar.css";
-@import "layout/navbar.css";
-
-@import "components/cards.css";
-@import "components/buttons.css";
-@import "components/forms.css";
-@import "components/tables.css";
-@import "components/modal.css";
-@import "components/alertas.css";
-@import "components/tooltip.css";
-
-@import "views/dashboard.css";
+@import url("base/variables.css");
+@import url("base/reset.css");
+@import url("base/typography.css");
+@import url("layout/grid.css");
+@import url("layout/sidebar.css");
+@import url("layout/navbar.css");
+@import url("components/cards.css");
+@import url("components/buttons.css");
+@import url("components/forms.css");
+@import url("components/tables.css");
+@import url("components/modal.css");
+@import url("components/alertas.css");
+@import url("components/tooltip.css");
+@import url("views/dashboard.css");

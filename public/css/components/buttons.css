@@ -19,6 +19,7 @@
   color: #fff;
   box-shadow: var(--sombra-sm);
 }
+
 .btn-primario:hover:not(:disabled) {
   background: var(--color-primario-claro);
   transform: translateY(-1px);
@@ -29,6 +30,7 @@
   color: var(--color-primario-oscuro);
   border: 1px solid var(--color-borde);
 }
+
 .btn-secundario:hover:not(:disabled) {
   background: #e9edf3;
 }
@@ -37,6 +39,7 @@
   background: var(--color-error);
   color: #fff;
 }
+
 .btn-peligro:hover:not(:disabled) {
   background: #931f19;
 }
@@ -46,6 +49,7 @@
   color: var(--color-error);
   border: 1px solid var(--color-error);
 }
+
 .btn-peligro-outline:hover:not(:disabled) {
   background: var(--color-error-fondo);
 }

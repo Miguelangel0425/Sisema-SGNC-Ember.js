@@ -34,36 +34,42 @@
 }
 
 /* Tablet */
-@media (max-width: 992px) {
+@media (width <= 992px) {
   .app-layout {
     grid-template-columns: 76px 1fr;
   }
+
   .sidebar-link span:not(.sidebar-link-icono) {
     display: none;
   }
+
   .sidebar-marca span:last-child {
     display: none;
   }
 }
 
 /* Móvil */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .app-layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
   }
+
   .sidebar {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
     height: auto;
   }
+
   .sidebar-nav {
     flex-direction: row;
   }
+
   .fila-campos {
     flex-direction: column;
   }
+
   .app-main {
     padding: var(--espaciado-md);
   }
