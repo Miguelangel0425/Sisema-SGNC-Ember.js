@@ -8,7 +8,9 @@ export default class Router extends EmberRouter {
 
 Router.map(function () {
   this.route('dashboard');
-  this.route('convocatorias');
+  this.route('convocatorias', function () {
+    this.route('nueva');
+  });
   this.route('directores', function () {
     this.route('nuevo');
   });
