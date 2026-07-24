@@ -17,11 +17,13 @@ module('Integration | Component | dashboard-cards', function (hooks) {
     assert.dom().hasText('');
 
     // Template block usage:
-    await render(<template>
-      <DashboardCards>
-        template block text
-      </DashboardCards>
-    </template>);
+    await render(
+      <template>
+        <DashboardCards>
+          template block text
+        </DashboardCards>
+      </template>,
+    );
 
     assert.dom().hasText('template block text');
   });

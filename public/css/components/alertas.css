@@ -21,7 +21,9 @@
   max-width: 360px;
   opacity: 0;
   transform: translateX(24px);
-  transition: opacity var(--transicion-normal), transform var(--transicion-normal);
+  transition:
+    opacity var(--transicion-normal),
+    transform var(--transicion-normal);
 }
 
 .alerta-visible {

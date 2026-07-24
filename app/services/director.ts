@@ -19,7 +19,7 @@ export default class DirectorService extends Service {
   public buscarPorNombre(termino: string): Director[] {
     const t = termino.trim().toLowerCase();
     return this.sistemaGestion.directores.filter((d) =>
-      d.obtenerNombreCompleto().toLowerCase().includes(t)
+      d.obtenerNombreCompleto().toLowerCase().includes(t),
     );
   }
 
@@ -27,7 +27,7 @@ export default class DirectorService extends Service {
     nombres: string,
     apellidos: string,
     correo: string,
-    telefono: string
+    telefono: string,
   ): IResultadoValidacion {
     let v = Validator.validarNombreObligatorio(nombres);
     if (!v.valido) return v;
@@ -47,12 +47,19 @@ export default class DirectorService extends Service {
     apellidos: string,
     correo: string,
     telefono: string,
-    departamento: string
+    departamento: string,
   ): IResultadoValidacion & { director?: Director } {
     const v = this.validarDatos(nombres, apellidos, correo, telefono);
     if (!v.valido) return v;
 
-    const director = new Director(IdGenerator.generar('DIR'), nombres, apellidos, correo, telefono, departamento);
+    const director = new Director(
+      IdGenerator.generar('DIR'),
+      nombres,
+      apellidos,
+      correo,
+      telefono,
+      departamento,
+    );
     this.sistemaGestion.registrarDirector(director);
     return { valido: true, director };
   }
@@ -63,7 +70,7 @@ export default class DirectorService extends Service {
     apellidos: string,
     correo: string,
     telefono: string,
-    departamento: string
+    departamento: string,
   ): IResultadoValidacion {
     const director = this.obtenerPorId(id);
     if (!director) return { valido: false, mensaje: 'Director no encontrado.' };
@@ -81,11 +88,14 @@ export default class DirectorService extends Service {
   }
 
   public eliminar(id: string): IResultadoValidacion {
-    const enUso = this.sistemaGestion.notasConceptuales.some((n) => n.director.id === id);
+    const enUso = this.sistemaGestion.notasConceptuales.some(
+      (n) => n.director.id === id,
+    );
     if (enUso) {
       return {
         valido: false,
-        mensaje: 'No se puede eliminar: el director está asignado a una o más notas conceptuales.',
+        mensaje:
+          'No se puede eliminar: el director está asignado a una o más notas conceptuales.',
       };
     }
     this.sistemaGestion.eliminarDirector(id);
@@ -99,6 +109,6 @@ export default class DirectorService extends Service {
 // like `@service('director') declare altName: DirectorService;`.
 declare module '@ember/service' {
   interface Registry {
-    'director': DirectorService;
+    director: DirectorService;
   }
 }

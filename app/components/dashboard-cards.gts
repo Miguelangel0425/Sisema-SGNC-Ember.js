@@ -16,14 +16,54 @@ export default class DashboardCardsComponent extends Component {
   get tarjetas(): ITarjeta[] {
     const stats = this.estadisticas.obtener();
     return [
-      { etiqueta: 'Convocatorias', valor: `${stats.numeroConvocatorias}`, icono: '📢', clase: 'tarjeta-azul' },
-      { etiqueta: 'Notas conceptuales', valor: `${stats.numeroNotas}`, icono: '📝', clase: 'tarjeta-morado' },
-      { etiqueta: 'Directores', valor: `${stats.numeroDirectores}`, icono: '👤', clase: 'tarjeta-verde' },
-      { etiqueta: 'Presupuesto total', valor: FormatUtils.formatearMoneda(stats.presupuestoTotal), icono: '💰', clase: 'tarjeta-dorado' },
-      { etiqueta: 'Notas aprobadas', valor: `${stats.notasAprobadas}`, icono: '✅', clase: 'tarjeta-verde' },
-      { etiqueta: 'Notas rechazadas', valor: `${stats.notasRechazadas}`, icono: '❌', clase: 'tarjeta-rojo' },
-      { etiqueta: 'Notas en revisión', valor: `${stats.notasEnRevision}`, icono: '🔄', clase: 'tarjeta-naranja' },
-      { etiqueta: 'Notas registradas', valor: `${stats.notasRegistradas}`, icono: '📥', clase: 'tarjeta-azul' },
+      {
+        etiqueta: 'Convocatorias',
+        valor: `${stats.numeroConvocatorias}`,
+        icono: '📢',
+        clase: 'tarjeta-azul',
+      },
+      {
+        etiqueta: 'Notas conceptuales',
+        valor: `${stats.numeroNotas}`,
+        icono: '📝',
+        clase: 'tarjeta-morado',
+      },
+      {
+        etiqueta: 'Directores',
+        valor: `${stats.numeroDirectores}`,
+        icono: '👤',
+        clase: 'tarjeta-verde',
+      },
+      {
+        etiqueta: 'Presupuesto total',
+        valor: FormatUtils.formatearMoneda(stats.presupuestoTotal),
+        icono: '💰',
+        clase: 'tarjeta-dorado',
+      },
+      {
+        etiqueta: 'Notas aprobadas',
+        valor: `${stats.notasAprobadas}`,
+        icono: '✅',
+        clase: 'tarjeta-verde',
+      },
+      {
+        etiqueta: 'Notas rechazadas',
+        valor: `${stats.notasRechazadas}`,
+        icono: '❌',
+        clase: 'tarjeta-rojo',
+      },
+      {
+        etiqueta: 'Notas en revisión',
+        valor: `${stats.notasEnRevision}`,
+        icono: '🔄',
+        clase: 'tarjeta-naranja',
+      },
+      {
+        etiqueta: 'Notas registradas',
+        valor: `${stats.notasRegistradas}`,
+        icono: '📥',
+        clase: 'tarjeta-azul',
+      },
     ];
   }
 

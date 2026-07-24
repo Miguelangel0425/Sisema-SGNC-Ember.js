@@ -11,7 +11,9 @@ export default class ConvocatoriaService extends Service {
   @service declare sistemaGestion: SistemaGestionService;
 
   public listar(): Convocatoria[] {
-    this.sistemaGestion.convocatorias.forEach((c) => c.marcarVencidaSiCorresponde());
+    this.sistemaGestion.convocatorias.forEach((c) =>
+      c.marcarVencidaSiCorresponde(),
+    );
     return this.sistemaGestion.convocatorias;
   }
 
@@ -22,36 +24,54 @@ export default class ConvocatoriaService extends Service {
   public crear(
     nombre: string,
     fechaInicio: Date,
-    fechaFin: Date
+    fechaFin: Date,
   ): IResultadoValidacion & { convocatoria?: Convocatoria } {
     const vNombre = Validator.validarNombreObligatorio(nombre);
     if (!vNombre.valido) return vNombre;
 
     const vUnico = Validator.validarNombreConvocatoriaUnico(
       nombre,
-      this.sistemaGestion.existeConvocatoriaConNombre(nombre)
+      this.sistemaGestion.existeConvocatoriaConNombre(nombre),
     );
     if (!vUnico.valido) return vUnico;
 
     const vInicio = FechaValidator.validarInicioConvocatoria(fechaInicio);
     if (!vInicio.valido) return vInicio;
 
-    const vRango = FechaValidator.validarRangoConvocatoria(fechaInicio, fechaFin);
+    const vRango = FechaValidator.validarRangoConvocatoria(
+      fechaInicio,
+      fechaFin,
+    );
     if (!vRango.valido) return vRango;
 
-    const convocatoria = new Convocatoria(IdGenerator.generar('CONV'), nombre, fechaInicio, fechaFin);
+    const convocatoria = new Convocatoria(
+      IdGenerator.generar('CONV'),
+      nombre,
+      fechaInicio,
+      fechaFin,
+    );
     this.sistemaGestion.registrarConvocatoria(convocatoria);
     return { valido: true, convocatoria };
   }
 
-  public editar(id: string, nombre: string, fechaInicio: Date, fechaFin: Date): IResultadoValidacion {
+  public editar(
+    id: string,
+    nombre: string,
+    fechaInicio: Date,
+    fechaFin: Date,
+  ): IResultadoValidacion {
     const convocatoria = this.obtenerPorId(id);
-    if (!convocatoria) return { valido: false, mensaje: 'Convocatoria no encontrada.' };
+    if (!convocatoria)
+      return { valido: false, mensaje: 'Convocatoria no encontrada.' };
 
-    const vModificable = ReglasNegocioValidator.validarConvocatoriaEsModificable(convocatoria);
+    const vModificable =
+      ReglasNegocioValidator.validarConvocatoriaEsModificable(convocatoria);
     if (!vModificable.valido) return vModificable;
 
-    const vRango = FechaValidator.validarRangoConvocatoria(fechaInicio, fechaFin);
+    const vRango = FechaValidator.validarRangoConvocatoria(
+      fechaInicio,
+      fechaFin,
+    );
     if (!vRango.valido) return vRango;
 
     convocatoria.nombre = nombre;
@@ -63,9 +83,14 @@ export default class ConvocatoriaService extends Service {
 
   public eliminar(id: string): IResultadoValidacion {
     const convocatoria = this.obtenerPorId(id);
-    if (!convocatoria) return { valido: false, mensaje: 'Convocatoria no encontrada.' };
+    if (!convocatoria)
+      return { valido: false, mensaje: 'Convocatoria no encontrada.' };
     if (convocatoria.notas.length > 0) {
-      return { valido: false, mensaje: 'No se puede eliminar: la convocatoria tiene notas conceptuales asociadas.' };
+      return {
+        valido: false,
+        mensaje:
+          'No se puede eliminar: la convocatoria tiene notas conceptuales asociadas.',
+      };
     }
     this.sistemaGestion.eliminarConvocatoria(id);
     return { valido: true };
@@ -73,7 +98,8 @@ export default class ConvocatoriaService extends Service {
 
   public cerrar(id: string): IResultadoValidacion {
     const convocatoria = this.obtenerPorId(id);
-    if (!convocatoria) return { valido: false, mensaje: 'Convocatoria no encontrada.' };
+    if (!convocatoria)
+      return { valido: false, mensaje: 'Convocatoria no encontrada.' };
     convocatoria.cerrar();
     this.sistemaGestion.tocarConvocatorias();
     return { valido: true };
@@ -85,6 +111,6 @@ export default class ConvocatoriaService extends Service {
 // like `@service('convocatoria') declare altName: ConvocatoriaService;`.
 declare module '@ember/service' {
   interface Registry {
-    'convocatoria': ConvocatoriaService;
+    convocatoria: ConvocatoriaService;
   }
 }

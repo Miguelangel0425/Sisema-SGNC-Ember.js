@@ -5,31 +5,33 @@
  * p. ej. "ODS 16. Paz, justicia..." -> "16", "OE3. Mejorar el..." -> "3".
  */
 export class ParserUtils {
-    public static obtenerNumeroODS(textoSeleccionado: string): string {
-        const match = textoSeleccionado.match(/ODS\s+(\d+)/i);
-        return match ? (match[1] ?? '') : '';
-    }
+  public static obtenerNumeroODS(textoSeleccionado: string): string {
+    const match = textoSeleccionado.match(/ODS\s+(\d+)/i);
+    return match ? (match[1] ?? '') : '';
+  }
 
-    public static obtenerNumeroOE(textoSeleccionado: string): string {
-        const match = textoSeleccionado.match(/OE(\d+)/i);
-        return match ? (match[1] ?? '') : '';
-    }
+  public static obtenerNumeroOE(textoSeleccionado: string): string {
+    const match = textoSeleccionado.match(/OE(\d+)/i);
+    return match ? (match[1] ?? '') : '';
+  }
 
-    public static obtenerNumeroPND(textoSeleccionado: string): string {
-        const match = textoSeleccionado.match(/^(\d+)\./);
-        return match ? (match[1] ?? '') : '';
-    }
+  public static obtenerNumeroPND(textoSeleccionado: string): string {
+    const match = textoSeleccionado.match(/^(\d+)\./);
+    return match ? (match[1] ?? '') : '';
+  }
 
-    public static obtenerCodigoCine(textoSeleccionado: string): string {
-        const match = textoSeleccionado.match(/^(\d+)/);
-        return match ? (match[1] ?? '') : '';
-    }
+  public static obtenerCodigoCine(textoSeleccionado: string): string {
+    const match = textoSeleccionado.match(/^(\d+)/);
+    return match ? (match[1] ?? '') : '';
+  }
 
-    /**
-     * Devuelve el primer código disponible de un arreglo de opciones.
-     * Usado al recargar hijos.
-     */
-    public static obtenerPrimerCodigo<T extends { codigo: string }>(opciones: T[]): string {
-        return opciones.length > 0 ? (opciones[0]?.codigo ?? '') : '';
-    }
+  /**
+   * Devuelve el primer código disponible de un arreglo de opciones.
+   * Usado al recargar hijos.
+   */
+  public static obtenerPrimerCodigo<T extends { codigo: string }>(
+    opciones: T[],
+  ): string {
+    return opciones.length > 0 ? (opciones[0]?.codigo ?? '') : '';
+  }
 }

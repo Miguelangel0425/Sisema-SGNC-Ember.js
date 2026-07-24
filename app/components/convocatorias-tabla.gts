@@ -3,7 +3,10 @@ import { service } from '@ember/service';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { FormatUtils } from '../utils/FormatUtils';
-import { EstadoConvocatoria, etiquetaEstadoConvocatoria } from '../enums/EstadoConvocatoria';
+import {
+  EstadoConvocatoria,
+  etiquetaEstadoConvocatoria,
+} from '../enums/EstadoConvocatoria';
 import type ConvocatoriaService from '../services/convocatoria';
 import type AlertaService from '../services/alerta';
 import type ConfirmService from '../services/confirm';
@@ -80,11 +83,22 @@ export default class ConvocatoriasTablaComponent extends Component {
                 <td>{{f.nombre}}</td>
                 <td>{{f.inicio}}</td>
                 <td>{{f.fin}}</td>
-                <td><span class="badge {{f.estadoClase}}">{{f.estadoTexto}}</span></td>
+                <td><span
+                    class="badge {{f.estadoClase}}"
+                  >{{f.estadoTexto}}</span></td>
                 <td>{{f.numeroNotas}}</td>
                 <td class="celda-acciones">
-                  <button type="button" class="btn btn-icono btn-secundario" disabled={{f.noPuedeCerrar}} {{on "click" (fn this.cerrar f.original)}}>Cerrar</button>
-                  <button type="button" class="btn btn-icono btn-peligro-outline" {{on "click" (fn this.eliminar f.original)}}>Eliminar</button>
+                  <button
+                    type="button"
+                    class="btn btn-icono btn-secundario"
+                    disabled={{f.noPuedeCerrar}}
+                    {{on "click" (fn this.cerrar f.original)}}
+                  >Cerrar</button>
+                  <button
+                    type="button"
+                    class="btn btn-icono btn-peligro-outline"
+                    {{on "click" (fn this.eliminar f.original)}}
+                  >Eliminar</button>
                 </td>
               </tr>
             {{/each}}

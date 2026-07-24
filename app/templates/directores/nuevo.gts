@@ -2,7 +2,7 @@ import type { TOC } from '@ember/component/template-only';
 import DirectorForm from '../../components/director-form';
 
 interface DirectoresNuevoSignature {
-  Args: {};
+  Args: Record<string, never>;
 }
 
 <template>

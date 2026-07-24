@@ -26,15 +26,25 @@ export default class AlertaService extends Service {
   mostrar(mensaje: string, tipo: TipoAlerta = 'info', duracionMs = 4000): void {
     contadorAlertas += 1;
     const id = contadorAlertas;
-    const nueva: IAlerta = { id, mensaje, tipo, icono: ICONOS[tipo], visible: false };
+    const nueva: IAlerta = {
+      id,
+      mensaje,
+      tipo,
+      icono: ICONOS[tipo],
+      visible: false,
+    };
     this.alertas = [...this.alertas, nueva];
 
     requestAnimationFrame(() => {
-      this.alertas = this.alertas.map((a) => (a.id === id ? { ...a, visible: true } : a));
+      this.alertas = this.alertas.map((a) =>
+        a.id === id ? { ...a, visible: true } : a,
+      );
     });
 
     setTimeout(() => {
-      this.alertas = this.alertas.map((a) => (a.id === id ? { ...a, visible: false } : a));
+      this.alertas = this.alertas.map((a) =>
+        a.id === id ? { ...a, visible: false } : a,
+      );
       setTimeout(() => {
         this.alertas = this.alertas.filter((a) => a.id !== id);
       }, 300);
@@ -61,6 +71,6 @@ export default class AlertaService extends Service {
 // like `@service('alerta') declare altName: AlertaService;`.
 declare module '@ember/service' {
   interface Registry {
-    'alerta': AlertaService;
+    alerta: AlertaService;
   }
 }

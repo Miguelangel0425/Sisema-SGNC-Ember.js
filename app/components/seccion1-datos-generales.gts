@@ -5,29 +5,41 @@ import { fn } from '@ember/helper';
 import type SistemaGestionService from '../services/sistema-gestion';
 import type { NotaConceptual } from '../models/NotaConceptual';
 import { Cobertura, ETIQUETAS_COBERTURA } from '../enums/Cobertura';
-import { SectorBeneficiario, ETIQUETAS_SECTOR_BENEFICIARIO } from '../enums/SectorBeneficiario';
+import {
+  SectorBeneficiario,
+  ETIQUETAS_SECTOR_BENEFICIARIO,
+} from '../enums/SectorBeneficiario';
 
 interface Seccion1Args {
   nota: NotaConceptual;
 }
 
-interface IOpcionCheckbox {
-  valor: string;
+interface IOpcionCobertura {
+  valor: Cobertura;
   etiqueta: string;
 }
 
-export default class Seccion1DatosGeneralesComponent extends Component<{ Args: Seccion1Args }> {
+interface IOpcionSector {
+  valor: SectorBeneficiario;
+  etiqueta: string;
+}
+
+export default class Seccion1DatosGeneralesComponent extends Component<{
+  Args: Seccion1Args;
+}> {
   @service declare sistemaGestion: SistemaGestionService;
 
-  opcionesCobertura: IOpcionCheckbox[] = Object.values(Cobertura).map((v) => ({
+  opcionesCobertura: IOpcionCobertura[] = Object.values(Cobertura).map((v) => ({
     valor: v,
     etiqueta: ETIQUETAS_COBERTURA[v],
   }));
 
-  opcionesSector: IOpcionCheckbox[] = Object.values(SectorBeneficiario).map((v) => ({
-    valor: v,
-    etiqueta: ETIQUETAS_SECTOR_BENEFICIARIO[v],
-  }));
+  opcionesSector: IOpcionSector[] = Object.values(SectorBeneficiario).map(
+    (v) => ({
+      valor: v,
+      etiqueta: ETIQUETAS_SECTOR_BENEFICIARIO[v],
+    }),
+  );
 
   get soloLectura(): boolean {
     return !this.args.nota.esEditable();
@@ -38,7 +50,9 @@ export default class Seccion1DatosGeneralesComponent extends Component<{ Args: S
   };
 
   sectorChecked = (valor: string): boolean => {
-    return this.args.nota.sectorBeneficiario.includes(valor as SectorBeneficiario);
+    return this.args.nota.sectorBeneficiario.includes(
+      valor as SectorBeneficiario,
+    );
   };
 
   toggleCobertura = (valor: Cobertura, event: Event): void => {
@@ -48,7 +62,9 @@ export default class Seccion1DatosGeneralesComponent extends Component<{ Args: S
         this.args.nota.cobertura = [...this.args.nota.cobertura, valor];
       }
     } else {
-      this.args.nota.cobertura = this.args.nota.cobertura.filter((c) => c !== valor);
+      this.args.nota.cobertura = this.args.nota.cobertura.filter(
+        (c) => c !== valor,
+      );
     }
     this.sistemaGestion.tocarNotas();
   };
@@ -57,20 +73,27 @@ export default class Seccion1DatosGeneralesComponent extends Component<{ Args: S
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       if (!this.args.nota.sectorBeneficiario.includes(valor)) {
-        this.args.nota.sectorBeneficiario = [...this.args.nota.sectorBeneficiario, valor];
+        this.args.nota.sectorBeneficiario = [
+          ...this.args.nota.sectorBeneficiario,
+          valor,
+        ];
       }
     } else {
-      this.args.nota.sectorBeneficiario = this.args.nota.sectorBeneficiario.filter((s) => s !== valor);
+      this.args.nota.sectorBeneficiario =
+        this.args.nota.sectorBeneficiario.filter((s) => s !== valor);
     }
     this.sistemaGestion.tocarNotas();
   };
 
   actualizarLocalizacion = (
     campo: 'provincia' | 'canton' | 'parroquia' | 'barrioComunidad',
-    event: Event
+    event: Event,
   ): void => {
     const valor = (event.target as HTMLInputElement).value;
-    this.args.nota.localizacion = { ...this.args.nota.localizacion, [campo]: valor };
+    this.args.nota.localizacion = {
+      ...this.args.nota.localizacion,
+      [campo]: valor,
+    };
     this.sistemaGestion.tocarNotas();
   };
 
@@ -98,19 +121,43 @@ export default class Seccion1DatosGeneralesComponent extends Component<{ Args: S
       <div class="fila-campos">
         <div class="campo-formulario">
           <label for="provincia">Provincia</label>
-          <input type="text" id="provincia" value={{@nota.localizacion.provincia}} disabled={{this.soloLectura}} {{on "blur" (fn this.actualizarLocalizacion "provincia")}} />
+          <input
+            type="text"
+            id="provincia"
+            value={{@nota.localizacion.provincia}}
+            disabled={{this.soloLectura}}
+            {{on "blur" (fn this.actualizarLocalizacion "provincia")}}
+          />
         </div>
         <div class="campo-formulario">
           <label for="canton">Cantón</label>
-          <input type="text" id="canton" value={{@nota.localizacion.canton}} disabled={{this.soloLectura}} {{on "blur" (fn this.actualizarLocalizacion "canton")}} />
+          <input
+            type="text"
+            id="canton"
+            value={{@nota.localizacion.canton}}
+            disabled={{this.soloLectura}}
+            {{on "blur" (fn this.actualizarLocalizacion "canton")}}
+          />
         </div>
         <div class="campo-formulario">
           <label for="parroquia">Parroquia</label>
-          <input type="text" id="parroquia" value={{@nota.localizacion.parroquia}} disabled={{this.soloLectura}} {{on "blur" (fn this.actualizarLocalizacion "parroquia")}} />
+          <input
+            type="text"
+            id="parroquia"
+            value={{@nota.localizacion.parroquia}}
+            disabled={{this.soloLectura}}
+            {{on "blur" (fn this.actualizarLocalizacion "parroquia")}}
+          />
         </div>
         <div class="campo-formulario">
           <label for="barrioComunidad">Barrio o comunidad</label>
-          <input type="text" id="barrioComunidad" value={{@nota.localizacion.barrioComunidad}} disabled={{this.soloLectura}} {{on "blur" (fn this.actualizarLocalizacion "barrioComunidad")}} />
+          <input
+            type="text"
+            id="barrioComunidad"
+            value={{@nota.localizacion.barrioComunidad}}
+            disabled={{this.soloLectura}}
+            {{on "blur" (fn this.actualizarLocalizacion "barrioComunidad")}}
+          />
         </div>
       </div>
 

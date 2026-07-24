@@ -2,7 +2,7 @@ import type { TOC } from '@ember/component/template-only';
 import NotaCrearForm from '../../components/nota-crear-form';
 
 interface NotasNuevaSignature {
-  Args: {};
+  Args: Record<string, never>;
 }
 
 <template>

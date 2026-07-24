@@ -7,7 +7,11 @@ export default class ConfirmService extends Service {
   @tracked tituloBoton = 'Eliminar';
   private accionConfirmar: (() => void) | null = null;
 
-  confirmar(mensaje: string, alConfirmar: () => void, tituloBoton = 'Eliminar'): void {
+  confirmar(
+    mensaje: string,
+    alConfirmar: () => void,
+    tituloBoton = 'Eliminar',
+  ): void {
     this.mensaje = mensaje;
     this.tituloBoton = tituloBoton;
     this.accionConfirmar = alConfirmar;
@@ -26,13 +30,12 @@ export default class ConfirmService extends Service {
   };
 }
 
-
 // Don't remove this declaration: this is what enables TypeScript to resolve
 // this service using `Owner.lookup('service:confirm')`, as well
 // as to check when you pass the service name as an argument to the decorator,
 // like `@service('confirm') declare altName: ConfirmService;`.
 declare module '@ember/service' {
   interface Registry {
-    'confirm': ConfirmService;
+    confirm: ConfirmService;
   }
 }

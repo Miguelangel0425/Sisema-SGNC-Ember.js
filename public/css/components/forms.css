@@ -20,7 +20,9 @@ textarea {
   border-radius: var(--radio-sm);
   background: var(--color-superficie);
   color: var(--color-texto);
-  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
+  transition:
+    border-color var(--transicion-rapida),
+    box-shadow var(--transicion-rapida);
 }
 
 input:focus,

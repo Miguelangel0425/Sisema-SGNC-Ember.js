@@ -23,21 +23,42 @@ export default class SeedService extends Service {
         IdGenerator.generar('CONV'),
         'Convocatoria de Notas Conceptuales 2026',
         hoy,
-        fechaFin
+        fechaFin,
       );
       this.sistemaGestion.registrarConvocatoria(convocatoriaBase);
     }
 
     if (this.sistemaGestion.directores.length === 0) {
       const directoresBase: [string, string, string, string, string][] = [
-        ['María', 'Torres Vega', 'mtorres@espe.edu.ec', '0991234567', DEPARTAMENTOS[0] ?? ''],
-        ['Carlos', 'Ramírez Ponce', 'cramirez@espe.edu.ec', '0987654321', DEPARTAMENTOS[1] ?? ''],
+        [
+          'María',
+          'Torres Vega',
+          'mtorres@espe.edu.ec',
+          '0991234567',
+          DEPARTAMENTOS[0] ?? '',
+        ],
+        [
+          'Carlos',
+          'Ramírez Ponce',
+          'cramirez@espe.edu.ec',
+          '0987654321',
+          DEPARTAMENTOS[1] ?? '',
+        ],
       ];
-      directoresBase.forEach(([nombres, apellidos, correo, telefono, departamento]) => {
-        this.sistemaGestion.registrarDirector(
-          new Director(IdGenerator.generar('DIR'), nombres, apellidos, correo, telefono, departamento)
-        );
-      });
+      directoresBase.forEach(
+        ([nombres, apellidos, correo, telefono, departamento]) => {
+          this.sistemaGestion.registrarDirector(
+            new Director(
+              IdGenerator.generar('DIR'),
+              nombres,
+              apellidos,
+              correo,
+              telefono,
+              departamento,
+            ),
+          );
+        },
+      );
     }
   }
 }
@@ -47,6 +68,6 @@ export default class SeedService extends Service {
 // like `@service('seed') declare altName: SeedService;`.
 declare module '@ember/service' {
   interface Registry {
-    'seed': SeedService;
+    seed: SeedService;
   }
 }

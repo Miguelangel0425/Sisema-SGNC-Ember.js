@@ -23,26 +23,34 @@ export default class CascadaSelectService extends Service {
   }
 
   /** Equivale a CargarCineEspecifico. */
-  public obtenerCineEspecificoPorAmplio(textoAmplioSeleccionado: string): IOpcion[] {
+  public obtenerCineEspecificoPorAmplio(
+    textoAmplioSeleccionado: string,
+  ): IOpcion[] {
     const codigo = ParserUtils.obtenerCodigoCine(textoAmplioSeleccionado);
     return CINE_ESPECIFICO_POR_AMPLIO[codigo] ?? [];
   }
 
   /** Equivale a CargarCineDetallado. */
-  public obtenerCineDetalladoPorEspecifico(textoEspecificoSeleccionado: string): IOpcion[] {
+  public obtenerCineDetalladoPorEspecifico(
+    textoEspecificoSeleccionado: string,
+  ): IOpcion[] {
     const codigo = ParserUtils.obtenerCodigoCine(textoEspecificoSeleccionado);
     return CINE_DETALLADO_POR_ESPECIFICO[codigo] ?? CINE_DETALLADO_GENERICO;
   }
 
   /** Equivale a CargarPNDPoliticas + ObtenerNumeroPND. */
-  public obtenerPoliticasPorObjetivoPND(textoObjetivoSeleccionado: string): IOpcion[] {
+  public obtenerPoliticasPorObjetivoPND(
+    textoObjetivoSeleccionado: string,
+  ): IOpcion[] {
     const codigo = ParserUtils.obtenerNumeroPND(textoObjetivoSeleccionado);
     return POLITICAS_POR_OBJETIVO_PND[codigo] ?? [];
   }
 
   /** Equivale a CargarOEEstrategias + ObtenerNumeroOE (lista única para cualquier OE). */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public obtenerEstrategiasPorOE(_textoObjetivoOESeleccionado: string): IOpcion[] {
+  public obtenerEstrategiasPorOE(
+    textoObjetivoOESeleccionado: string,
+  ): IOpcion[] {
+    void textoObjetivoOESeleccionado;
     return OE_ESTRATEGIAS;
   }
 }

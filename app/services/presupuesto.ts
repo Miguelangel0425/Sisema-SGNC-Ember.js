@@ -17,7 +17,7 @@ export default class PresupuestoService extends Service {
     descripcionItem: string,
     nombreBienServicio: string,
     cantidad: number,
-    valorUnitario: number
+    valorUnitario: number,
   ): IResultadoValidacion {
     const vEditable = ReglasNegocioValidator.validarPresupuestoEditable(nota);
     if (!vEditable.valido) return vEditable;
@@ -29,7 +29,9 @@ export default class PresupuestoService extends Service {
     if (!vValor.valido) return vValor;
 
     const subtotalNuevo = cantidad * valorUnitario;
-    const vLimite = PresupuestoValidator.validarLimiteTotal(nota.presupuesto.calcularTotal() + subtotalNuevo);
+    const vLimite = PresupuestoValidator.validarLimiteTotal(
+      nota.presupuesto.calcularTotal() + subtotalNuevo,
+    );
     if (!vLimite.valido) return vLimite;
 
     const item = new ItemPresupuesto(
@@ -38,14 +40,17 @@ export default class PresupuestoService extends Service {
       descripcionItem,
       nombreBienServicio,
       cantidad,
-      valorUnitario
+      valorUnitario,
     );
     nota.presupuesto.agregarItem(item);
     this.sistemaGestion.tocarNotas();
     return { valido: true };
   }
 
-  public eliminarItem(nota: NotaConceptual, idItem: string): IResultadoValidacion {
+  public eliminarItem(
+    nota: NotaConceptual,
+    idItem: string,
+  ): IResultadoValidacion {
     const vEditable = ReglasNegocioValidator.validarPresupuestoEditable(nota);
     if (!vEditable.valido) return vEditable;
 
@@ -54,8 +59,14 @@ export default class PresupuestoService extends Service {
     return { valido: true };
   }
 
-  public asignarEntidadCooperante(nota: NotaConceptual, nombreEntidad: string): EntidadCooperante {
-    const entidad = new EntidadCooperante(IdGenerator.generar('ENT'), nombreEntidad);
+  public asignarEntidadCooperante(
+    nota: NotaConceptual,
+    nombreEntidad: string,
+  ): EntidadCooperante {
+    const entidad = new EntidadCooperante(
+      IdGenerator.generar('ENT'),
+      nombreEntidad,
+    );
     nota.presupuesto.entidadCooperante = entidad;
     nota.entidadesCooperantes.push(entidad);
     this.sistemaGestion.tocarNotas();
@@ -66,7 +77,7 @@ export default class PresupuestoService extends Service {
     entidad: EntidadCooperante,
     detalle: string,
     cantidad: number,
-    valorUnitario: number
+    valorUnitario: number,
   ): IResultadoValidacion {
     const vCantidad = PresupuestoValidator.validarCantidad(cantidad);
     if (!vCantidad.valido) return vCantidad;
@@ -74,14 +85,25 @@ export default class PresupuestoService extends Service {
     if (!vValor.valido) return vValor;
 
     entidad.agregarItem(
-      new ItemPresupuesto(IdGenerator.generar('ITEMENT'), '', detalle, detalle, cantidad, valorUnitario)
+      new ItemPresupuesto(
+        IdGenerator.generar('ITEMENT'),
+        '',
+        detalle,
+        detalle,
+        cantidad,
+        valorUnitario,
+      ),
     );
     this.sistemaGestion.tocarNotas();
     return { valido: true };
   }
 
-  public validarPresupuestoCompleto(nota: NotaConceptual): IResultadoValidacion {
-    return PresupuestoValidator.validarAlMenosUnItem(nota.presupuesto.items.length);
+  public validarPresupuestoCompleto(
+    nota: NotaConceptual,
+  ): IResultadoValidacion {
+    return PresupuestoValidator.validarAlMenosUnItem(
+      nota.presupuesto.items.length,
+    );
   }
 }
 // Don't remove this declaration: this is what enables TypeScript to resolve
@@ -90,6 +112,6 @@ export default class PresupuestoService extends Service {
 // like `@service('presupuesto') declare altName: PresupuestoService;`.
 declare module '@ember/service' {
   interface Registry {
-    'presupuesto': PresupuestoService;
+    presupuesto: PresupuestoService;
   }
 }

@@ -14,7 +14,7 @@ export default class CronogramaService extends Service {
     nota: NotaConceptual,
     nombre: string,
     fechaInicio: Date,
-    fechaFin: Date
+    fechaFin: Date,
   ): IResultadoValidacion {
     const vEditable = ReglasNegocioValidator.validarNotaEsEditable(nota);
     if (!vEditable.valido) return vEditable;
@@ -23,20 +23,31 @@ export default class CronogramaService extends Service {
       fechaInicio,
       fechaFin,
       nota.fechaInicioPlanificada,
-      nota.fechaFinPlanificada
+      nota.fechaFinPlanificada,
     );
     if (!vFechas.valido) return vFechas;
 
-    const actividad = new Actividad(IdGenerator.generar('ACT'), nombre, fechaInicio, fechaFin);
+    const actividad = new Actividad(
+      IdGenerator.generar('ACT'),
+      nombre,
+      fechaInicio,
+      fechaFin,
+    );
     nota.cronograma.agregar(actividad);
     this.sistemaGestion.tocarNotas();
     return { valido: true };
   }
 
   /** "Eliminar una actividad valida que continúe existiendo al menos una." */
-  public eliminarActividad(nota: NotaConceptual, idActividad: string): IResultadoValidacion {
+  public eliminarActividad(
+    nota: NotaConceptual,
+    idActividad: string,
+  ): IResultadoValidacion {
     if (nota.cronograma.actividades.length <= 1) {
-      return { valido: false, mensaje: 'Debe existir al menos una actividad en el cronograma.' };
+      return {
+        valido: false,
+        mensaje: 'Debe existir al menos una actividad en el cronograma.',
+      };
     }
     nota.cronograma.eliminar(idActividad);
     this.sistemaGestion.tocarNotas();
@@ -54,6 +65,6 @@ export default class CronogramaService extends Service {
 // like `@service('cronograma') declare altName: CronogramaService;`.
 declare module '@ember/service' {
   interface Registry {
-    'cronograma': CronogramaService;
+    cronograma: CronogramaService;
   }
 }

@@ -3,7 +3,7 @@ import { LinkTo } from '@ember/routing';
 import DirectoresTabla from '../../components/directores-tabla';
 
 interface DirectoresIndexSignature {
-  Args: {};
+  Args: Record<string, never>;
 }
 
 <template>

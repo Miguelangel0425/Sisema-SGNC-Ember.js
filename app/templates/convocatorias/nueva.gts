@@ -2,7 +2,7 @@ import type { TOC } from '@ember/component/template-only';
 import ConvocatoriaForm from '../../components/convocatoria-form';
 
 interface ConvocatoriasNuevaSignature {
-  Args: {};
+  Args: Record<string, never>;
 }
 
 <template>

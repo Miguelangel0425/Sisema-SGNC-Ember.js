@@ -1,7 +1,7 @@
 export enum EstadoConvocatoria {
-  ABIERTA = "ABIERTA",
-  CERRADA = "CERRADA",
-  VENCIDA = "VENCIDA",
+  ABIERTA = 'ABIERTA',
+  CERRADA = 'CERRADA',
+  VENCIDA = 'VENCIDA',
 }
 
 /** "Una convocatoria vencida no admite nuevas notas." */
@@ -16,9 +16,9 @@ export function convocatoriaEsModificable(estado: EstadoConvocatoria): boolean {
 
 export function etiquetaEstadoConvocatoria(estado: EstadoConvocatoria): string {
   const etiquetas: Record<EstadoConvocatoria, string> = {
-    [EstadoConvocatoria.ABIERTA]: "Abierta",
-    [EstadoConvocatoria.CERRADA]: "Cerrada",
-    [EstadoConvocatoria.VENCIDA]: "Vencida",
+    [EstadoConvocatoria.ABIERTA]: 'Abierta',
+    [EstadoConvocatoria.CERRADA]: 'Cerrada',
+    [EstadoConvocatoria.VENCIDA]: 'Vencida',
   };
   return etiquetas[estado];
 }

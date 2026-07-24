@@ -1,7 +1,7 @@
-import type { IPersona } from "./IPersona";
+import type { IPersona } from './IPersona';
 
 export interface IDirector extends IPersona {
-    departamento: string;
-    correo: string;
-    telefono: string;
+  departamento: string;
+  correo: string;
+  telefono: string;
 }

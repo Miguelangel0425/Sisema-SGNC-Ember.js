@@ -4,6 +4,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import type SistemaGestionService from '../services/sistema-gestion';
 import type AlertaService from '../services/alerta';
+import type Owner from '@ember/owner';
 import type { NotaConceptual } from '../models/NotaConceptual';
 import { TipoImpacto, ETIQUETAS_TIPO_IMPACTO } from '../enums/TipoImpacto';
 import { ImpactoEsperado } from '../models/ImpactoEsperado';
@@ -19,7 +20,7 @@ export default class Seccion4ImpactosComponent extends Component<{
   @service declare sistemaGestion: SistemaGestionService;
   @service declare alerta: AlertaService;
 
-  constructor(owner: unknown, args: Seccion4Args) {
+  constructor(owner: Owner, args: Seccion4Args) {
     super(owner, args);
     if (this.args.nota.impactosEsperados.length === 0) {
       Object.values(TipoImpacto).forEach((tipo) => {

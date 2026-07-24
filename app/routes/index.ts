@@ -3,9 +3,9 @@ import { service } from '@ember/service';
 import type RouterService from '@ember/routing/router-service';
 
 export default class IndexRoute extends Route {
-    @service declare router: RouterService;
+  @service declare router: RouterService;
 
-    beforeModel() {
-        this.router.transitionTo('dashboard');
-    }
+  beforeModel() {
+    this.router.transitionTo('dashboard');
+  }
 }

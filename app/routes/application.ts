@@ -3,9 +3,9 @@ import { service } from '@ember/service';
 import type SeedService from '../services/seed';
 
 export default class ApplicationRoute extends Route {
-    @service declare seed: SeedService;
+  @service declare seed: SeedService;
 
-    beforeModel() {
-        this.seed.ejecutar();
-    }
+  beforeModel() {
+    this.seed.ejecutar();
+  }
 }

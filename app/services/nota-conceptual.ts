@@ -18,7 +18,9 @@ export default class NotaConceptualService extends Service {
   }
 
   public obtenerPorId(id: string): NotaConceptual | null {
-    return this.sistemaGestion.notasConceptuales.find((n) => n.id === id) ?? null;
+    return (
+      this.sistemaGestion.notasConceptuales.find((n) => n.id === id) ?? null
+    );
   }
 
   public crear(
@@ -27,22 +29,25 @@ export default class NotaConceptualService extends Service {
     director: Director,
     fechaInicio: Date,
     fechaFin: Date,
-    convocatoria: Convocatoria
+    convocatoria: Convocatoria,
   ): IResultadoValidacion & { nota?: NotaConceptual } {
     const vNombre = Validator.validarNombreObligatorio(nombre);
     if (!vNombre.valido) return vNombre;
 
-    const vDirector = ReglasNegocioValidator.validarDebeExistirDirector(director?.id ?? null);
+    const vDirector = ReglasNegocioValidator.validarDebeExistirDirector(
+      director?.id ?? null,
+    );
     if (!vDirector.valido) return vDirector;
 
-    const vConvAdmite = ReglasNegocioValidator.validarConvocatoriaAdmiteNotas(convocatoria);
+    const vConvAdmite =
+      ReglasNegocioValidator.validarConvocatoriaAdmiteNotas(convocatoria);
     if (!vConvAdmite.valido) return vConvAdmite;
 
     const vFechas = FechaValidator.validarNotaDentroDeConvocatoria(
       fechaInicio,
       fechaFin,
       convocatoria.fechaInicio,
-      convocatoria.fechaFin
+      convocatoria.fechaFin,
     );
     if (!vFechas.valido) return vFechas;
 
@@ -50,7 +55,7 @@ export default class NotaConceptualService extends Service {
     const codigo = IdGenerator.generarCodigoNota(secuencia);
     const vCodigo = Validator.validarCodigoUnico(
       codigo,
-      this.sistemaGestion.notasConceptuales.map((n) => n.codigo)
+      this.sistemaGestion.notasConceptuales.map((n) => n.codigo),
     );
     if (!vCodigo.valido) return vCodigo;
 
@@ -62,7 +67,7 @@ export default class NotaConceptualService extends Service {
       director,
       fechaInicio,
       fechaFin,
-      convocatoria.id
+      convocatoria.id,
     );
     this.sistemaGestion.registrarNota(nota);
     convocatoria.agregarNota(nota);
@@ -72,22 +77,29 @@ export default class NotaConceptualService extends Service {
 
   public eliminar(id: string): IResultadoValidacion {
     const nota = this.obtenerPorId(id);
-    if (!nota) return { valido: false, mensaje: 'Nota conceptual no encontrada.' };
+    if (!nota)
+      return { valido: false, mensaje: 'Nota conceptual no encontrada.' };
 
     const vEliminable = ReglasNegocioValidator.validarNotaEsEliminable(nota);
     if (!vEliminable.valido) return vEliminable;
 
     this.sistemaGestion.eliminarNota(id);
-    const convocatoria = this.sistemaGestion.convocatorias.find((c) => c.id === nota.convocatoriaId);
+    const convocatoria = this.sistemaGestion.convocatorias.find(
+      (c) => c.id === nota.convocatoriaId,
+    );
     convocatoria?.removerNota(id);
     this.sistemaGestion.tocarConvocatorias();
     return { valido: true };
   }
 
   /** "Cambiar el estado actualiza automáticamente todas las tablas" -> se "toca" el array global. */
-  public cambiarEstado(id: string, nuevoEstado: EstadoNota): IResultadoValidacion {
+  public cambiarEstado(
+    id: string,
+    nuevoEstado: EstadoNota,
+  ): IResultadoValidacion {
     const nota = this.obtenerPorId(id);
-    if (!nota) return { valido: false, mensaje: 'Nota conceptual no encontrada.' };
+    if (!nota)
+      return { valido: false, mensaje: 'Nota conceptual no encontrada.' };
     nota.cambiarEstado(nuevoEstado);
     this.sistemaGestion.tocarNotas();
     return { valido: true };
@@ -103,25 +115,50 @@ export default class NotaConceptualService extends Service {
    */
   public validarFormularioCompleto(nota: NotaConceptual): IResultadoValidacion {
     if (!nota.alineamiento.validarAlMenosUnAmbito()) {
-      return { valido: false, mensaje: 'Sección 2 (Alineamiento): seleccione al menos un ámbito prioritario de actuación.' };
+      return {
+        valido: false,
+        mensaje:
+          'Sección 2 (Alineamiento): seleccione al menos un ámbito prioritario de actuación.',
+      };
     }
     if (nota.presupuesto.items.length === 0) {
-      return { valido: false, mensaje: 'Sección 5 (Presupuesto): debe existir al menos un ítem presupuestario.' };
+      return {
+        valido: false,
+        mensaje:
+          'Sección 5 (Presupuesto): debe existir al menos un ítem presupuestario.',
+      };
     }
     if (nota.presupuesto.excedeLimite()) {
-      return { valido: false, mensaje: 'Sección 5 (Presupuesto): el total excede el límite permitido de $20 000.' };
+      return {
+        valido: false,
+        mensaje:
+          'Sección 5 (Presupuesto): el total excede el límite permitido de $20 000.',
+      };
     }
     if (!nota.poblacionBeneficiaria.validarJerarquia()) {
       return {
         valido: false,
-        mensaje: 'Sección 4 (Impactos): la jerarquía población objetivo ≤ potencial ≤ referencia no se cumple.',
+        mensaje:
+          'Sección 4 (Impactos): la jerarquía población objetivo ≤ potencial ≤ referencia no se cumple.',
       };
     }
     if (!nota.cronograma.validarAlMenosUna()) {
-      return { valido: false, mensaje: 'Sección 6 (Cronograma): debe existir al menos una actividad.' };
+      return {
+        valido: false,
+        mensaje: 'Sección 6 (Cronograma): debe existir al menos una actividad.',
+      };
     }
-    if (!nota.cronograma.estanDentroDeNota(nota.fechaInicioPlanificada, nota.fechaFinPlanificada)) {
-      return { valido: false, mensaje: 'Sección 6 (Cronograma): hay actividades fuera del período de ejecución de la nota.' };
+    if (
+      !nota.cronograma.estanDentroDeNota(
+        nota.fechaInicioPlanificada,
+        nota.fechaFinPlanificada,
+      )
+    ) {
+      return {
+        valido: false,
+        mensaje:
+          'Sección 6 (Cronograma): hay actividades fuera del período de ejecución de la nota.',
+      };
     }
     return { valido: true };
   }

@@ -15,6 +15,6 @@ export default class EstadisticasService extends Service {
 // like `@service('estadisticas') declare altName: EstadisticasService;`.
 declare module '@ember/service' {
   interface Registry {
-    'estadisticas': EstadisticasService;
+    estadisticas: EstadisticasService;
   }
 }

@@ -1,5 +1,9 @@
 .sidebar {
-  background: linear-gradient(180deg, var(--color-primario-oscuro), var(--color-primario));
+  background: linear-gradient(
+    180deg,
+    var(--color-primario-oscuro),
+    var(--color-primario)
+  );
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -37,7 +41,9 @@
   font-weight: 500;
   font-size: 0.92rem;
   border-left: 3px solid transparent;
-  transition: background var(--transicion-rapida), border-color var(--transicion-rapida);
+  transition:
+    background var(--transicion-rapida),
+    border-color var(--transicion-rapida);
 }
 
 .sidebar-link:hover {

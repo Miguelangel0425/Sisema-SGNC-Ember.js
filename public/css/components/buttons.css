@@ -6,7 +6,10 @@
   border-radius: var(--radio-sm);
   font-size: 0.85rem;
   font-weight: 600;
-  transition: background var(--transicion-rapida), transform var(--transicion-rapida), box-shadow var(--transicion-rapida);
+  transition:
+    background var(--transicion-rapida),
+    transform var(--transicion-rapida),
+    box-shadow var(--transicion-rapida);
 }
 
 .btn:disabled {

@@ -16,7 +16,9 @@
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transicion-rapida), transform var(--transicion-rapida);
+  transition:
+    opacity var(--transicion-rapida),
+    transform var(--transicion-rapida);
   z-index: 10;
 }
 

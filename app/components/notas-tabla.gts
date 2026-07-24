@@ -8,7 +8,6 @@ import { etiquetaEstadoNota } from '../enums/EstadoNota';
 import type NotaConceptualService from '../services/nota-conceptual';
 import type AlertaService from '../services/alerta';
 import type ConfirmService from '../services/confirm';
-import type { NotaConceptual } from '../models/NotaConceptual';
 
 interface IFilaNota {
   id: string;
