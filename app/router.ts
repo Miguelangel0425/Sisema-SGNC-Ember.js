@@ -14,7 +14,10 @@ Router.map(function () {
   this.route('directores', function () {
     this.route('nuevo');
   });
-  this.route('notas');
+  this.route('notas', function () {
+    this.route('nueva');
+    this.route('detalle', { path: '/:nota_id' });
+  });
   this.route('consultas');
   this.route('reportes');
 });
