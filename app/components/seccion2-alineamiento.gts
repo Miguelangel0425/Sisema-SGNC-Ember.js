@@ -9,23 +9,20 @@ import type CascadaSelectService from '../services/cascada-select';
 import type { NotaConceptual } from '../models/NotaConceptual';
 import type { IAmbitoPrioritario } from '../models/Alineamiento';
 import type { IOpcion } from '../types/ICascada';
+import { ODS } from '../models/ODS';
+import { ParserUtils } from '../utils/ParserUtils';
 import { ODS_LISTA } from '../data/ods.data';
 import { CINE_AMPLIO } from '../data/cine.data';
 import { PND_OBJETIVOS } from '../data/pnd.data';
 import { OE_OBJETIVOS } from '../data/planEstrategico.data';
 import { LINEAS_INVESTIGACION } from '../data/lineasInvestigacion.data';
-import {
-  DOMINIOS_INSTITUCIONALES,
-  DOMINIOS_ACADEMICOS,
-} from '../data/dominiosAcademicos.data';
+import { DOMINIOS_INSTITUCIONALES, DOMINIOS_ACADEMICOS } from '../data/dominiosAcademicos.data';
 
 interface Seccion2Args {
   nota: NotaConceptual;
 }
 
-export default class Seccion2AlineamientoComponent extends Component<{
-  Args: Seccion2Args;
-}> {
+export default class Seccion2AlineamientoComponent extends Component<{ Args: Seccion2Args }> {
   @service declare sistemaGestion: SistemaGestionService;
   @service declare alerta: AlertaService;
   @service declare cascadaSelect: CascadaSelectService;
@@ -38,20 +35,28 @@ export default class Seccion2AlineamientoComponent extends Component<{
   dominiosInstitucionales = DOMINIOS_INSTITUCIONALES;
   dominiosAcademicos = DOMINIOS_ACADEMICOS;
 
-  // --- Estado local de las cascadas: al igual que en el original, estos selects
-  //     encadenados no se guardan en el modelo, solo sirven para poblar el siguiente select. ---
+  // --- Estado local de las cascadas (no se persiste en el modelo por sí solo) ---
+  @tracked odsSeleccionadoTexto = '';
   @tracked metasOds: IOpcion[] = [];
+  @tracked metaSeleccionadaTexto = '';
+
   @tracked cineEspecificos: IOpcion[] = [];
   @tracked cineDetallados: IOpcion[] = [];
+
   @tracked pndPoliticas: IOpcion[] = [];
+
   @tracked oeEstrategias: IOpcion[] = [];
+
+  // Contador para forzar el refresco de listas anidadas (agregar/quitar ODS, líneas, etc.)
+  @tracked private version = 0;
 
   get soloLectura(): boolean {
     return !this.args.nota.esEditable();
   }
 
-  get puedeAgregarLinea(): boolean {
-    return this.args.nota.alineamiento.lineasInvestigacion.length >= 2;
+  private refrescar(): void {
+    this.version++;
+    this.sistemaGestion.tocarNotas();
   }
 
   // ---- Ámbitos prioritarios ----
@@ -64,31 +69,77 @@ export default class Seccion2AlineamientoComponent extends Component<{
     this.sistemaGestion.tocarNotas();
   };
 
-  // ---- Cascada ODS ----
+  // ---- ODS + Metas (máximo 2, se agregan a una lista persistida) ----
+  get odsAgregados(): ODS[] {
+    void this.version;
+    return this.args.nota.alineamiento.ods;
+  }
+
+  get puedeAgregarOds(): boolean {
+    return this.odsAgregados.length >= 2;
+  }
+
   cambiarOds = (event: Event): void => {
     const valor = (event.target as HTMLSelectElement).value;
+    this.odsSeleccionadoTexto = valor;
     this.metasOds = this.cascadaSelect.obtenerMetasPorODS(valor);
+    this.metaSeleccionadaTexto = '';
+  };
+
+  cambiarMetaOds = (event: Event): void => {
+    this.metaSeleccionadaTexto = (event.target as HTMLSelectElement).value;
+  };
+
+  agregarOds = (): void => {
+    if (!this.odsSeleccionadoTexto) {
+      this.alerta.advertencia('Seleccione un ODS.');
+      return;
+    }
+    if (!this.metaSeleccionadaTexto) {
+      this.alerta.advertencia('Seleccione una meta para el ODS.');
+      return;
+    }
+    const codigo = ParserUtils.obtenerNumeroODS(this.odsSeleccionadoTexto);
+    const yaExiste = this.odsAgregados.some((o) => o.codigo === codigo);
+    if (yaExiste) {
+      this.alerta.advertencia('Ese ODS ya fue agregado.');
+      return;
+    }
+
+    try {
+      this.args.nota.alineamiento.agregarODS(new ODS(codigo, this.odsSeleccionadoTexto, this.metaSeleccionadaTexto));
+    } catch (err) {
+      this.alerta.advertencia((err as Error).message);
+      return;
+    }
+
+    this.odsSeleccionadoTexto = '';
+    this.metaSeleccionadaTexto = '';
+    this.metasOds = [];
+    this.refrescar();
+  };
+
+  quitarOds = (codigo: string): void => {
+    this.args.nota.alineamiento.removerODS(codigo);
+    this.refrescar();
   };
 
   // ---- Cascada CINE ----
   cambiarCineAmplio = (event: Event): void => {
     const valor = (event.target as HTMLSelectElement).value;
-    this.cineEspecificos =
-      this.cascadaSelect.obtenerCineEspecificoPorAmplio(valor);
+    this.cineEspecificos = this.cascadaSelect.obtenerCineEspecificoPorAmplio(valor);
     this.cineDetallados = [];
   };
 
   cambiarCineEspecifico = (event: Event): void => {
     const valor = (event.target as HTMLSelectElement).value;
-    this.cineDetallados =
-      this.cascadaSelect.obtenerCineDetalladoPorEspecifico(valor);
+    this.cineDetallados = this.cascadaSelect.obtenerCineDetalladoPorEspecifico(valor);
   };
 
   // ---- Cascada PND ----
   cambiarPndObjetivo = (event: Event): void => {
     const valor = (event.target as HTMLSelectElement).value;
-    this.pndPoliticas =
-      this.cascadaSelect.obtenerPoliticasPorObjetivoPND(valor);
+    this.pndPoliticas = this.cascadaSelect.obtenerPoliticasPorObjetivoPND(valor);
   };
 
   // ---- Plan estratégico OE ----
@@ -98,13 +149,17 @@ export default class Seccion2AlineamientoComponent extends Component<{
   };
 
   // ---- Líneas de investigación ----
+  get puedeAgregarLinea(): boolean {
+    return this.args.nota.alineamiento.lineasInvestigacion.length >= 2;
+  }
+
   agregarLinea = (event: Event): void => {
     const select = event.target as HTMLSelectElement;
     const valor = select.value;
     if (!valor) return;
     try {
       this.args.nota.alineamiento.agregarLineaInvestigacion(valor);
-      this.sistemaGestion.tocarNotas();
+      this.refrescar();
     } catch (err) {
       this.alerta.advertencia((err as Error).message);
     }
@@ -113,21 +168,17 @@ export default class Seccion2AlineamientoComponent extends Component<{
 
   quitarLinea = (linea: string): void => {
     this.args.nota.alineamiento.removerLineaInvestigacion(linea);
-    this.sistemaGestion.tocarNotas();
+    this.refrescar();
   };
 
   // ---- Dominios ----
   actualizarDominioInstitucional = (event: Event): void => {
-    this.args.nota.alineamiento.dominioInstitucional = (
-      event.target as HTMLSelectElement
-    ).value;
+    this.args.nota.alineamiento.dominioInstitucional = (event.target as HTMLSelectElement).value;
     this.sistemaGestion.tocarNotas();
   };
 
   actualizarDominioAcademico = (event: Event): void => {
-    this.args.nota.alineamiento.dominioAcademico = (
-      event.target as HTMLSelectElement
-    ).value;
+    this.args.nota.alineamiento.dominioAcademico = (event.target as HTMLSelectElement).value;
     this.sistemaGestion.tocarNotas();
   };
 
@@ -145,23 +196,11 @@ export default class Seccion2AlineamientoComponent extends Component<{
                 <td>{{ambito.nombre}}</td>
                 <td>
                   <label class="radio-item">
-                    <input
-                      type="radio"
-                      name="ambito-{{ambito.nombre}}"
-                      checked={{this.ambitoAplica ambito "SI"}}
-                      disabled={{this.soloLectura}}
-                      {{on "change" (fn this.cambiarAmbito ambito "SI")}}
-                    />
+                    <input type="radio" name="ambito-{{ambito.nombre}}" checked={{this.ambitoAplica ambito "SI"}} disabled={{this.soloLectura}} {{on "change" (fn this.cambiarAmbito ambito "SI")}} />
                     SI
                   </label>
                   <label class="radio-item">
-                    <input
-                      type="radio"
-                      name="ambito-{{ambito.nombre}}"
-                      checked={{this.ambitoAplica ambito "NO"}}
-                      disabled={{this.soloLectura}}
-                      {{on "change" (fn this.cambiarAmbito ambito "NO")}}
-                    />
+                    <input type="radio" name="ambito-{{ambito.nombre}}" checked={{this.ambitoAplica ambito "NO"}} disabled={{this.soloLectura}} {{on "change" (fn this.cambiarAmbito ambito "NO")}} />
                     NO
                   </label>
                 </td>
@@ -171,45 +210,74 @@ export default class Seccion2AlineamientoComponent extends Component<{
         </table>
       </div>
 
-      {{! Cascada ODS }}
-      <div class="fila-campos">
-        <div class="campo-formulario">
-          <label for="selectOds">ODS (Objetivo de Desarrollo Sostenible)</label>
-          <select
-            id="selectOds"
-            disabled={{this.soloLectura}}
-            {{on "change" this.cambiarOds}}
-          >
-            <option value="">Elija un elemento</option>
-            {{#each this.odsLista as |o|}}
-              <option value={{o.texto}}>{{o.texto}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <div class="campo-formulario">
-          <label for="selectMetaOds">Meta ODS</label>
-          <select id="selectMetaOds" disabled={{this.soloLectura}}>
-            {{#if this.metasOds.length}}
-              <option value="">Elija un elemento</option>
-              {{#each this.metasOds as |m|}}
-                <option value={{m.texto}}>{{m.texto}}</option>
+      {{! ODS + Metas — máximo 2 }}
+      <div class="campo-formulario">
+        <label>ODS (Objetivos de Desarrollo Sostenible) — máximo 2</label>
+
+        {{#if this.odsAgregados.length}}
+          <table class="tabla-elegante">
+            <thead>
+              <tr>
+                <th>ODS</th>
+                <th>Meta seleccionada</th>
+                {{#unless this.soloLectura}}<th>Acciones</th>{{/unless}}
+              </tr>
+            </thead>
+            <tbody>
+              {{#each this.odsAgregados as |o|}}
+                <tr>
+                  <td>{{o.nombre}}</td>
+                  <td>{{o.metaSeleccionada}}</td>
+                  {{#unless this.soloLectura}}
+                    <td><button type="button" class="btn btn-icono btn-peligro-outline" {{on "click" (fn this.quitarOds o.codigo)}}>Quitar</button></td>
+                  {{/unless}}
+                </tr>
               {{/each}}
-            {{else}}
-              <option value="">Seleccione primero un ODS</option>
-            {{/if}}
-          </select>
-        </div>
+            </tbody>
+          </table>
+        {{else}}
+          <p class="tabla-vacia">No hay ODS agregados todavía.</p>
+        {{/if}}
+
+        {{#unless this.soloLectura}}
+          <div class="fila-campos">
+            <div class="campo-formulario">
+              <label for="selectOds">ODS</label>
+              <select id="selectOds" disabled={{this.puedeAgregarOds}} {{on "change" this.cambiarOds}}>
+                <option value="">Elija un elemento</option>
+                {{#each this.odsLista as |o|}}
+                  <option value={{o.texto}}>{{o.texto}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="campo-formulario">
+              <label for="selectMetaOds">Meta ODS</label>
+              <select id="selectMetaOds" disabled={{this.puedeAgregarOds}} {{on "change" this.cambiarMetaOds}}>
+                {{#if this.metasOds.length}}
+                  <option value="">Elija un elemento</option>
+                  {{#each this.metasOds as |m|}}
+                    <option value={{m.texto}}>{{m.texto}}</option>
+                  {{/each}}
+                {{else}}
+                  <option value="">Seleccione primero un ODS</option>
+                {{/if}}
+              </select>
+            </div>
+            <div class="campo-formulario campo-boton-agregar">
+              <button type="button" class="btn btn-secundario" disabled={{this.puedeAgregarOds}} {{on "click" this.agregarOds}}>+ Agregar ODS</button>
+            </div>
+          </div>
+          {{#if this.puedeAgregarOds}}
+            <p class="mensaje-info">Ya se agregaron los 2 ODS permitidos. Quite uno para agregar otro.</p>
+          {{/if}}
+        {{/unless}}
       </div>
 
       {{! Cascada CINE }}
       <div class="fila-campos">
         <div class="campo-formulario">
           <label for="selectCineAmplio">Campo amplio (CINE-UNESCO)</label>
-          <select
-            id="selectCineAmplio"
-            disabled={{this.soloLectura}}
-            {{on "change" this.cambiarCineAmplio}}
-          >
+          <select id="selectCineAmplio" disabled={{this.soloLectura}} {{on "change" this.cambiarCineAmplio}}>
             <option value="">Elija un elemento</option>
             {{#each this.cineAmplioLista as |c|}}
               <option value={{c.texto}}>{{c.texto}}</option>
@@ -218,11 +286,7 @@ export default class Seccion2AlineamientoComponent extends Component<{
         </div>
         <div class="campo-formulario">
           <label for="selectCineEspecifico">Campo específico</label>
-          <select
-            id="selectCineEspecifico"
-            disabled={{this.soloLectura}}
-            {{on "change" this.cambiarCineEspecifico}}
-          >
+          <select id="selectCineEspecifico" disabled={{this.soloLectura}} {{on "change" this.cambiarCineEspecifico}}>
             {{#if this.cineEspecificos.length}}
               <option value="">Elija un elemento</option>
               {{#each this.cineEspecificos as |e|}}
@@ -252,11 +316,7 @@ export default class Seccion2AlineamientoComponent extends Component<{
       <div class="fila-campos">
         <div class="campo-formulario">
           <label for="selectPndObjetivo">Objetivo PND</label>
-          <select
-            id="selectPndObjetivo"
-            disabled={{this.soloLectura}}
-            {{on "change" this.cambiarPndObjetivo}}
-          >
+          <select id="selectPndObjetivo" disabled={{this.soloLectura}} {{on "change" this.cambiarPndObjetivo}}>
             <option value="">Elija un elemento</option>
             {{#each this.pndObjetivos as |p|}}
               <option value={{p.texto}}>{{p.texto}}</option>
@@ -282,11 +342,7 @@ export default class Seccion2AlineamientoComponent extends Component<{
       <div class="fila-campos">
         <div class="campo-formulario">
           <label for="selectOe">Objetivo estratégico institucional (OE)</label>
-          <select
-            id="selectOe"
-            disabled={{this.soloLectura}}
-            {{on "change" this.cambiarOe}}
-          >
+          <select id="selectOe" disabled={{this.soloLectura}} {{on "change" this.cambiarOe}}>
             <option value="">Elija un elemento</option>
             {{#each this.oeObjetivos as |o|}}
               <option value={{o.texto}}>{{o.texto}}</option>
@@ -316,18 +372,12 @@ export default class Seccion2AlineamientoComponent extends Component<{
             <span class="chip">
               {{linea}}
               {{#unless this.soloLectura}}
-                <button
-                  type="button"
-                  {{on "click" (fn this.quitarLinea linea)}}
-                >×</button>
+                <button type="button" {{on "click" (fn this.quitarLinea linea)}}>×</button>
               {{/unless}}
             </span>
           {{/each}}
         </div>
-        <select
-          disabled={{this.puedeAgregarLinea}}
-          {{on "change" this.agregarLinea}}
-        >
+        <select disabled={{this.puedeAgregarLinea}} {{on "change" this.agregarLinea}}>
           <option value="">Elija un elemento</option>
           {{#each this.lineasInvestigacionCatalogo as |linea|}}
             <option value={{linea}}>{{linea}}</option>
@@ -339,11 +389,7 @@ export default class Seccion2AlineamientoComponent extends Component<{
       <div class="fila-campos">
         <div class="campo-formulario">
           <label for="selectDominioInst">Dominio institucional</label>
-          <select
-            id="selectDominioInst"
-            disabled={{this.soloLectura}}
-            {{on "change" this.actualizarDominioInstitucional}}
-          >
+          <select id="selectDominioInst" disabled={{this.soloLectura}} {{on "change" this.actualizarDominioInstitucional}}>
             <option value="">Seleccione un elemento</option>
             {{#each this.dominiosInstitucionales as |d|}}
               <option value={{d}}>{{d}}</option>
@@ -352,11 +398,7 @@ export default class Seccion2AlineamientoComponent extends Component<{
         </div>
         <div class="campo-formulario">
           <label for="selectDominioAcad">Dominio académico</label>
-          <select
-            id="selectDominioAcad"
-            disabled={{this.soloLectura}}
-            {{on "change" this.actualizarDominioAcademico}}
-          >
+          <select id="selectDominioAcad" disabled={{this.soloLectura}} {{on "change" this.actualizarDominioAcademico}}>
             <option value="">Seleccione un elemento</option>
             {{#each this.dominiosAcademicos as |d|}}
               <option value={{d}}>{{d}}</option>

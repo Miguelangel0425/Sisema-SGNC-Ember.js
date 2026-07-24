@@ -1,5 +1,6 @@
 import type { TOC } from '@ember/component/template-only';
 import { pageTitle } from 'ember-page-title';
+import ConsultasPanel from '../components/consultas-panel';
 
 interface ConsultasSignature {
   Args: {
@@ -10,5 +11,6 @@ interface ConsultasSignature {
 
 <template>
   {{pageTitle "Consultas"}}
-  {{outlet}}
+  <h2 class="vista-titulo">Consultas</h2>
+  <ConsultasPanel />
 </template> satisfies TOC<ConsultasSignature>;
