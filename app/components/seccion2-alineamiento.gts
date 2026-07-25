@@ -149,8 +149,13 @@ export default class Seccion2AlineamientoComponent extends Component<{ Args: Sec
   };
 
   // ---- Líneas de investigación ----
+  get lineasInvestigacionSeleccionadas(): string[] {
+    void this.version;
+    return this.args.nota.alineamiento.lineasInvestigacion;
+  }
+
   get puedeAgregarLinea(): boolean {
-    return this.args.nota.alineamiento.lineasInvestigacion.length >= 2;
+    return this.lineasInvestigacionSeleccionadas.length >= 2;
   }
 
   agregarLinea = (event: Event): void => {
@@ -368,7 +373,7 @@ export default class Seccion2AlineamientoComponent extends Component<{ Args: Sec
       <div class="campo-formulario">
         <label>Líneas de investigación (máximo 2)</label>
         <div class="chips-lista">
-          {{#each @nota.alineamiento.lineasInvestigacion as |linea|}}
+          {{#each this.lineasInvestigacionSeleccionadas as |linea|}}
             <span class="chip">
               {{linea}}
               {{#unless this.soloLectura}}

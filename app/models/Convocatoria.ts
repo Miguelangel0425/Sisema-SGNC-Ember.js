@@ -83,4 +83,8 @@ export class Convocatoria {
     public removerNota(id: string): void {
         this._notas = this._notas.filter((n) => n.id !== id);
     }
+    /** Solo para reconstruir el estado al restaurar datos desde almacenamiento persistente. */
+    public restaurarEstado(estado: EstadoConvocatoria): void {
+        this._estado = estado;
+    }
 }

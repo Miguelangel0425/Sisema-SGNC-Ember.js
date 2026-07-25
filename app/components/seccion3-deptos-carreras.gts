@@ -11,25 +11,45 @@ import { Departamento } from '../models/Departamento';
 import { Carrera } from '../models/Carrera';
 import { IdGenerator } from '../utils/IdGenerator';
 import { SEDES_UNIDADES_ACADEMICAS } from '../data/sedesUnidadesAcademicas.data';
+import { DEPARTAMENTOS } from '../data/departamentos.data';
+import { obtenerCarrerasPorSede } from '../data/carrerasPorSede.data';
 
 interface Seccion3Args {
   nota: NotaConceptual;
 }
 
-export default class Seccion3DeptosCarrerasComponent extends Component<{
-  Args: Seccion3Args;
-}> {
+export default class Seccion3DeptosCarrerasComponent extends Component<{ Args: Seccion3Args }> {
   @service declare sistemaGestion: SistemaGestionService;
   @service declare alerta: AlertaService;
   @service declare confirm: ConfirmService;
 
   sedes = SEDES_UNIDADES_ACADEMICAS;
+  departamentosCatalogo = DEPARTAMENTOS;
 
   @tracked private version = 0;
+
+  // Sede elegida en el sub-formulario de Carrera, para saber si mostrar select o texto libre.
+  @tracked sedeCarreraSeleccionada = '';
 
   get soloLectura(): boolean {
     return !this.args.nota.esEditable();
   }
+
+  get carrerasDisponibles(): string[] {
+    return obtenerCarrerasPorSede(this.sedeCarreraSeleccionada);
+  }
+
+  get sedeCarreraTieneCatalogo(): boolean {
+    return this.carrerasDisponibles.length > 0;
+  }
+
+  get sinSedeCarreraElegida(): boolean {
+    return !this.sedeCarreraSeleccionada;
+  }
+
+  cambiarSedeCarrera = (event: Event): void => {
+    this.sedeCarreraSeleccionada = (event.target as HTMLSelectElement).value;
+  };
 
   get departamentos(): Departamento[] {
     void this.version;
@@ -37,10 +57,7 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
   }
 
   get totalDocentes(): number {
-    return this.departamentos.reduce(
-      (acc, d) => acc + d.nroDocentesPlanificados,
-      0,
-    );
+    return this.departamentos.reduce((acc, d) => acc + d.nroDocentesPlanificados, 0);
   }
 
   get carreras(): Carrera[] {
@@ -49,10 +66,7 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
   }
 
   get totalEstudiantes(): number {
-    return this.carreras.reduce(
-      (acc, c) => acc + c.nroEstudiantesPlanificados,
-      0,
-    );
+    return this.carreras.reduce((acc, c) => acc + c.nroEstudiantesPlanificados, 0);
   }
 
   private refrescar(): void {
@@ -63,29 +77,14 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
   agregarDepartamento = (event: SubmitEvent): void => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
-    const sede = (form.elements.namedItem('sedeDepto') as HTMLSelectElement)
-      .value;
-    const nombre = (
-      form.elements.namedItem('nombreDepto') as HTMLInputElement
-    ).value.trim();
-    const objetivo = (
-      form.elements.namedItem('objetivoDepto') as HTMLInputElement
-    ).value.trim();
-    const docentes = Number(
-      (form.elements.namedItem('docentesDepto') as HTMLInputElement).value,
-    );
+    const sede = (form.elements.namedItem('sedeDepto') as HTMLSelectElement).value;
+    const nombre = (form.elements.namedItem('nombreDepto') as HTMLSelectElement).value;
+    const objetivo = (form.elements.namedItem('objetivoDepto') as HTMLTextAreaElement).value.trim();
+    const docentes = Number((form.elements.namedItem('docentesDepto') as HTMLInputElement).value);
 
-    const depto = new Departamento(
-      IdGenerator.generar('DEPTO'),
-      nombre,
-      sede,
-      objetivo,
-      docentes,
-    );
+    const depto = new Departamento(IdGenerator.generar('DEPTO'), nombre, sede, objetivo, docentes);
     if (!depto.validar()) {
-      this.alerta.advertencia(
-        'Complete todos los campos del departamento con valores válidos.',
-      );
+      this.alerta.advertencia('Complete todos los campos del departamento con valores válidos.');
       return;
     }
     this.args.nota.departamentosParticipantes.push(depto);
@@ -94,46 +93,30 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
   };
 
   eliminarDepartamento = (depto: Departamento): void => {
-    this.confirm.confirmar(
-      `¿Eliminar el departamento "${depto.nombre}"?`,
-      () => {
-        const lista = this.args.nota.departamentosParticipantes;
-        lista.splice(lista.indexOf(depto), 1);
-        this.refrescar();
-      },
-    );
+    this.confirm.confirmar(`¿Eliminar el departamento "${depto.nombre}"?`, () => {
+      const lista = this.args.nota.departamentosParticipantes;
+      lista.splice(lista.indexOf(depto), 1);
+      this.refrescar();
+    });
   };
 
   agregarCarrera = (event: SubmitEvent): void => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
-    const sede = (form.elements.namedItem('sedeCarrera') as HTMLSelectElement)
-      .value;
-    const nombre = (
-      form.elements.namedItem('nombreCarrera') as HTMLInputElement
-    ).value.trim();
-    const objetivo = (
-      form.elements.namedItem('objetivoCarrera') as HTMLInputElement
-    ).value.trim();
-    const estudiantes = Number(
-      (form.elements.namedItem('estudiantesCarrera') as HTMLInputElement).value,
-    );
+    const sede = (form.elements.namedItem('sedeCarrera') as HTMLSelectElement).value;
+    const campoCarrera = form.elements.namedItem('nombreCarrera') as HTMLSelectElement | HTMLInputElement;
+    const nombre = campoCarrera.value.trim();
+    const objetivo = (form.elements.namedItem('objetivoCarrera') as HTMLTextAreaElement).value.trim();
+    const estudiantes = Number((form.elements.namedItem('estudiantesCarrera') as HTMLInputElement).value);
 
-    const carrera = new Carrera(
-      IdGenerator.generar('CARR'),
-      nombre,
-      sede,
-      objetivo,
-      estudiantes,
-    );
+    const carrera = new Carrera(IdGenerator.generar('CARR'), nombre, sede, objetivo, estudiantes);
     if (!carrera.validar()) {
-      this.alerta.advertencia(
-        'Complete todos los campos de la carrera con valores válidos.',
-      );
+      this.alerta.advertencia('Complete todos los campos de la carrera con valores válidos.');
       return;
     }
     this.args.nota.carrerasParticipantes.push(carrera);
     form.reset();
+    this.sedeCarreraSeleccionada = '';
     this.refrescar();
   };
 
@@ -170,11 +153,7 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
                   <td>{{d.objetivoNota}}</td>
                   <td>{{d.nroDocentesPlanificados}}</td>
                   {{#unless this.soloLectura}}
-                    <td><button
-                        type="button"
-                        class="btn btn-icono btn-peligro-outline"
-                        {{on "click" (fn this.eliminarDepartamento d)}}
-                      >Eliminar</button></td>
+                    <td><button type="button" class="btn btn-icono btn-peligro-outline" {{on "click" (fn this.eliminarDepartamento d)}}>Eliminar</button></td>
                   {{/unless}}
                 </tr>
               {{/each}}
@@ -192,28 +171,21 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
         {{/if}}
 
         {{#unless this.soloLectura}}
-          <form
-            class="formulario-inline"
-            {{on "submit" this.agregarDepartamento}}
-          >
+          <form class="formulario-inline" {{on "submit" this.agregarDepartamento}}>
             <select name="sedeDepto">
-              <option value="">Seleccione un elemento</option>
+              <option value="">Seleccione una sede</option>
               {{#each this.sedes as |s|}}
                 <option value={{s}}>{{s}}</option>
               {{/each}}
             </select>
-            <input type="text" name="nombreDepto" placeholder="Departamento" />
-            <input
-              type="text"
-              name="objetivoDepto"
-              placeholder="Objetivo de la nota"
-            />
-            <input
-              type="number"
-              name="docentesDepto"
-              placeholder="Nro. docentes"
-              min="1"
-            />
+            <select name="nombreDepto">
+              <option value="">Seleccione un departamento</option>
+              {{#each this.departamentosCatalogo as |dep|}}
+                <option value={{dep}}>{{dep}}</option>
+              {{/each}}
+            </select>
+            <textarea name="objetivoDepto" placeholder="Objetivo de la nota" rows="2"></textarea>
+            <input type="number" name="docentesDepto" placeholder="Nro. docentes" min="1" />
             <button type="submit" class="btn btn-secundario">+ Agregar</button>
           </form>
         {{/unless}}
@@ -240,11 +212,7 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
                   <td>{{c.objetivoNota}}</td>
                   <td>{{c.nroEstudiantesPlanificados}}</td>
                   {{#unless this.soloLectura}}
-                    <td><button
-                        type="button"
-                        class="btn btn-icono btn-peligro-outline"
-                        {{on "click" (fn this.eliminarCarrera c)}}
-                      >Eliminar</button></td>
+                    <td><button type="button" class="btn btn-icono btn-peligro-outline" {{on "click" (fn this.eliminarCarrera c)}}>Eliminar</button></td>
                   {{/unless}}
                 </tr>
               {{/each}}
@@ -263,26 +231,33 @@ export default class Seccion3DeptosCarrerasComponent extends Component<{
 
         {{#unless this.soloLectura}}
           <form class="formulario-inline" {{on "submit" this.agregarCarrera}}>
-            <select name="sedeCarrera">
-              <option value="">Seleccione un elemento</option>
+            <select name="sedeCarrera" {{on "change" this.cambiarSedeCarrera}}>
+              <option value="">Seleccione una sede</option>
               {{#each this.sedes as |s|}}
                 <option value={{s}}>{{s}}</option>
               {{/each}}
             </select>
-            <input type="text" name="nombreCarrera" placeholder="Carrera" />
-            <input
-              type="text"
-              name="objetivoCarrera"
-              placeholder="Objetivo de la nota"
-            />
-            <input
-              type="number"
-              name="estudiantesCarrera"
-              placeholder="Nro. estudiantes"
-              min="1"
-            />
+
+            {{#if this.sedeCarreraTieneCatalogo}}
+              <select name="nombreCarrera">
+                <option value="">Seleccione una carrera</option>
+                {{#each this.carrerasDisponibles as |c|}}
+                  <option value={{c}}>{{c}}</option>
+                {{/each}}
+              </select>
+            {{else}}
+              <input type="text" name="nombreCarrera" placeholder={{if this.sedeCarreraSeleccionada "Carrera (sin catálogo oficial, ingrese el nombre)" "Seleccione primero una sede"}} disabled={{this.sinSedeCarreraElegida}} />
+            {{/if}}
+
+            <textarea name="objetivoCarrera" placeholder="Objetivo de la nota" rows="2"></textarea>
+            <input type="number" name="estudiantesCarrera" placeholder="Nro. estudiantes" min="1" />
             <button type="submit" class="btn btn-secundario">+ Agregar</button>
           </form>
+          {{#if this.sedeCarreraSeleccionada}}
+            {{#unless this.sedeCarreraTieneCatalogo}}
+              <p class="mensaje-info">Esta sede no tiene un catálogo oficial de carreras públicas; ingrese el nombre manualmente.</p>
+            {{/unless}}
+          {{/if}}
         {{/unless}}
       </div>
     </section>
