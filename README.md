@@ -1,54 +1,67 @@
-# sisema-sgnc-ember
+### Patrones de arquitectura usados
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+- **Service Layer**: toda la lógica de negocio vive en `app/services/`, inyectada vía `@service` en componentes y rutas.
+- **Fuente de verdad reactiva**: `SistemaGestionService` centraliza el estado (`@tracked`), reemplazando el patrón Singleton + Observer manual de versiones anteriores del proyecto — Ember re-renderiza automáticamente cualquier componente que dependa de datos que cambian.
+- **Persistencia por serialización**: `app/utils/persistencia.ts` convierte las clases de dominio a JSON plano y viceversa, para guardarlas en `localStorage` sin perder su comportamiento (validaciones, cálculos) al recargar.
+- **Componentes por sección**: cada una de las 6 secciones del Anexo 1 es un componente Glimmer independiente y reutilizable (`seccion1-datos-generales.gts` ... `seccion6-cronograma.gts`).
 
-## Prerequisites
+## Evidencia de uso del Anexo 1
 
-You will need the following things properly installed on your computer.
+El modelo de datos (`app/models/NotaConceptual.ts` y sus clases relacionadas) y las 6 secciones del formulario mapean 1:1 los campos y reglas del Anexo 1 de la Convocatoria de Notas Conceptuales 2026, incluyendo la numeración exacta de secciones, los límites de selección (máx. 2 ODS, máx. 2 líneas de investigación), el tope presupuestario institucional (USD 20,000), y los catálogos oficiales referenciados en el documento (sedes/unidades académicas, departamentos, ODS, PND, CINE-UNESCO).
 
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) (with npm)
-- [Google Chrome](https://google.com/chrome/)
+## Requisitos previos
 
-## Installation
+- Node.js 20+
+- npm 10+
+- **Windows**: activar el "Modo de desarrollador" (Configuración → Privacidad y seguridad → Para desarrolladores), requerido por Ember CLI/Vite para crear symlinks durante el desarrollo y el build.
 
-- `git clone <repository-url>` this repository
-- `cd sisema-sgnc-ember`
-- `npm install`
+## Instalación y ejecución en desarrollo
 
-## Running / Development
+```bash
+npm install
+npm start
+```
 
-- `npm run start`
-- Visit your app at [http://localhost:4200](http://localhost:4200).
-- Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+La aplicación queda disponible en `http://localhost:4200`.
 
-### Code Generators
+## Build de producción
 
-Make use of the many generators for code, try `npm exec ember help generate` for more details
+```bash
+npm run build
+```
 
-### Running Tests
+Genera los archivos estáticos optimizados en `dist/`.
 
-- `npm run test`
+## Despliegue con Docker
 
-### Linting
+La imagen se construye en dos etapas: compila la app con Node 20 y sirve los archivos estáticos resultantes con Nginx.
 
-- `npm run lint`
-- `npm run lint:fix`
+### Construir la imagen
 
-### Building
+```bash
+docker build -t m3nm4/signc-ember:latest .
+```
 
-- `npm exec vite build --mode development` (development)
-- `npm run build` (production)
+### Probar localmente
 
-### Deploying
+```bash
+docker run --rm -p 80:80 m3nm4/signc-ember:latest
+```
 
-Specify what it takes to deploy your app.
+La aplicación queda disponible en `http://localhost`.
 
-## Further Reading / Useful Links
+### Publicar en Docker Hub
 
-- [ember.js](https://emberjs.com/)
-- [Vite](https://vite.dev)
-- Development Browser Extensions
-  - [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  - [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+```bash
+docker login
+docker push m3nm4/signc-ember:latest
+```
+
+Imagen publicada: [`m3nm4/signc-ember`](https://hub.docker.com/r/m3nm4/signc-ember)
+
+### Ejecutar la imagen publicada
+
+```bash
+docker pull m3nm4/signc-ember:latest
+docker run -d -p 8080:80 --name signc-ember m3nm4/signc-ember:latest
+```
