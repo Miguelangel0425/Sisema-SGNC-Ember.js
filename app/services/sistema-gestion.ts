@@ -4,7 +4,7 @@ import { Convocatoria } from '../models/Convocatoria';
 import { Director } from '../models/Director';
 import { NotaConceptual } from '../models/NotaConceptual';
 import { EstadoNota } from '../enums/EstadoNota';
-import { serializarSistema, restaurarSistema } from '../utils/Persistencia';
+import { serializarSistema, restaurarSistema } from '../utils/persistencia';
 
 export interface IEstadisticasDashboard {
   numeroConvocatorias: number;
