@@ -57,8 +57,8 @@
 }
 
 .tarjeta-azul { border-left-color: var(--color-primario); }
-.tarjeta-morado { border-left-color: #6a4c93; }
+.tarjeta-morado { border-left-color: var(--color-primario-claro); }
 .tarjeta-verde { border-left-color: var(--color-exito); }
-.tarjeta-dorado { border-left-color: var(--color-dorado); }
+.tarjeta-dorado { border-left-color: var(--color-primario); }
 .tarjeta-rojo { border-left-color: var(--color-error); }
 .tarjeta-naranja { border-left-color: var(--color-advertencia); }

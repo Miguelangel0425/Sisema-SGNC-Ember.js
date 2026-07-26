@@ -27,12 +27,13 @@
 
 .btn-secundario {
   background: var(--color-fondo);
-  color: var(--color-primario-oscuro);
+  color: var(--color-texto-suave);
   border: 1px solid var(--color-borde);
 }
 
 .btn-secundario:hover:not(:disabled) {
-  background: #e9edf3;
+  background: var(--color-fondo-secundario);
+  color: var(--color-texto);
 }
 
 .btn-peligro {
@@ -41,7 +42,7 @@
 }
 
 .btn-peligro:hover:not(:disabled) {
-  background: #931f19;
+  background: #b91c1c;
 }
 
 .btn-peligro-outline {

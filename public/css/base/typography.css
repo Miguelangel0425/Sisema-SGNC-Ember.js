@@ -11,9 +11,9 @@ h1, h2, h3, h4 {
 
 .seccion-titulo {
   font-size: 1.05rem;
-  color: var(--color-primario);
+  color: var(--color-texto);
   padding-bottom: var(--espaciado-sm);
-  border-bottom: 2px solid var(--color-dorado);
+  border-bottom: 2px solid var(--color-primario);
   margin-bottom: var(--espaciado-md);
 }
 

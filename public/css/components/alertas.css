@@ -32,25 +32,25 @@
 .alerta-exito {
   background: var(--color-exito-fondo);
   color: var(--color-exito);
-  border: 1px solid var(--color-exito);
+  border: 1px solid var(--color-exito-borde);
 }
 
 .alerta-error {
   background: var(--color-error-fondo);
   color: var(--color-error);
-  border: 1px solid var(--color-error);
+  border: 1px solid var(--color-error-borde);
 }
 
 .alerta-advertencia {
   background: var(--color-advertencia-fondo);
   color: var(--color-advertencia);
-  border: 1px solid var(--color-advertencia);
+  border: 1px solid var(--color-advertencia-borde);
 }
 
 .alerta-info {
   background: var(--color-info-fondo);
   color: var(--color-info);
-  border: 1px solid var(--color-info);
+  border: 1px solid var(--color-info-borde);
 }
 
 .alerta-icono {

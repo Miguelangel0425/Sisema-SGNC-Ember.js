@@ -6,14 +6,15 @@
 }
 
 .tabla-elegante thead th {
-  background: var(--color-primario);
-  color: #fff;
+  background: var(--color-fondo-secundario);
+  color: var(--color-texto-suave);
+  border-bottom: 1.5px solid var(--color-borde);
   text-align: left;
-  padding: 10px 14px;
+  padding: 12px 14px;
   font-weight: 600;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .tabla-elegante tbody td {

@@ -12,7 +12,8 @@
 
 .navbar-titulo {
   font-size: 1.1rem;
-  color: var(--color-primario-oscuro);
+  color: var(--color-texto);
+  font-weight: 600;
 }
 
 .navbar-subtitulo {

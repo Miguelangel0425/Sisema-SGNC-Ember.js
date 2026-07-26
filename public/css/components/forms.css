@@ -28,7 +28,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgb(11 61 99 / 12%);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .campo-invalido {
@@ -150,11 +150,12 @@ textarea:focus {
 .btn-registrar {
   font-size: 1rem;
   padding: 14px 32px;
-  background: var(--color-verde-oliva);
+  background: var(--color-primario);
+  color: #fff;
 }
 
 .btn-registrar:hover:not(:disabled) {
-  background: #3c4b1c;
+  background: var(--color-primario-claro);
   transform: translateY(-1px);
 }
 
