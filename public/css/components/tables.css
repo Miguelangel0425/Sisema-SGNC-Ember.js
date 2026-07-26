@@ -1,63 +1,111 @@
 .tabla-elegante {
-  width: 100%;
-  border-radius: var(--radio-md);
-  overflow: hidden;
-  font-size: 0.85rem;
+    width: 100%;
+    border-radius: var(--radio-md);
+    overflow: hidden;
+    font-size: 0.85rem;
+    border: 1px solid var(--color-borde);
 }
 
 .tabla-elegante thead th {
-  background: var(--color-fondo-secundario);
-  color: var(--color-texto-suave);
-  border-bottom: 1.5px solid var(--color-borde);
-  text-align: left;
-  padding: 12px 14px;
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+    background: var(--color-primario-oscuro);
+    color: #fff;
+    text-align: left;
+    padding: 10px 14px;
+    font-family: var(--fuente-base);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .tabla-elegante tbody td {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--color-borde);
-  color: var(--color-texto);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-borde);
+    color: var(--color-texto);
 }
 
 .tabla-elegante tbody tr:hover {
-  background: var(--color-fondo);
+    background: var(--color-fondo);
 }
 
 .tabla-elegante tbody tr.fila-totales {
-  background: var(--color-info-fondo);
-  font-weight: 700;
+    background: var(--color-info-fondo);
+    font-weight: 700;
+    font-family: var(--fuente-mono);
 }
 
 .tabla-vacia {
-  color: var(--color-texto-suave);
-  font-style: italic;
-  padding: var(--espaciado-md) 0;
-  text-align: center;
+    color: var(--color-texto-suave);
+    font-style: italic;
+    padding: var(--espaciado-md) 0;
+    text-align: center;
 }
 
 .texto-descripcion-base {
-  font-size: 0.78rem;
-  color: var(--color-texto-suave);
-  font-style: italic;
+    font-size: 0.78rem;
+    color: var(--color-texto-suave);
+    font-style: italic;
 }
 
 .badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid transparent;
 }
 
-.badge-registrada { background: var(--color-info-fondo); color: var(--color-info); }
-.badge-en_revision { background: var(--color-advertencia-fondo); color: var(--color-advertencia); }
-.badge-aprobada { background: var(--color-exito-fondo); color: var(--color-exito); }
-.badge-rechazada { background: var(--color-error-fondo); color: var(--color-error); }
-.badge-abierta { background: var(--color-exito-fondo); color: var(--color-exito); }
-.badge-cerrada { background: var(--color-advertencia-fondo); color: var(--color-advertencia); }
-.badge-vencida { background: var(--color-error-fondo); color: var(--color-error); }
+.badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.badge-registrada {
+    background: var(--color-info-fondo);
+    color: var(--color-info);
+    border-color: rgba(18, 58, 94, 0.25);
+}
+
+.badge-en_revision {
+    background: var(--color-advertencia-fondo);
+    color: var(--color-advertencia);
+    border-color: rgba(147, 89, 10, 0.25);
+}
+
+.badge-aprobada {
+    background: var(--color-exito-fondo);
+    color: var(--color-exito);
+    border-color: rgba(30, 107, 58, 0.25);
+}
+
+.badge-rechazada {
+    background: var(--color-error-fondo);
+    color: var(--color-error);
+    border-color: rgba(143, 44, 38, 0.25);
+}
+
+.badge-abierta {
+    background: var(--color-exito-fondo);
+    color: var(--color-exito);
+    border-color: rgba(30, 107, 58, 0.25);
+}
+
+.badge-cerrada {
+    background: var(--color-advertencia-fondo);
+    color: var(--color-advertencia);
+    border-color: rgba(147, 89, 10, 0.25);
+}
+
+.badge-vencida {
+    background: var(--color-error-fondo);
+    color: var(--color-error);
+    border-color: rgba(143, 44, 38, 0.25);
+}

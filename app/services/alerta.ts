@@ -12,10 +12,10 @@ export interface IAlerta {
 }
 
 const ICONOS: Record<TipoAlerta, string> = {
-  exito: '✔',
-  error: '✖',
-  advertencia: '⚠',
-  info: 'ℹ',
+  exito: 'bi-check-circle-fill',
+  error: 'bi-x-circle-fill',
+  advertencia: 'bi-exclamation-triangle-fill',
+  info: 'bi-info-circle-fill',
 };
 
 let contadorAlertas = 0;

@@ -1,64 +1,71 @@
 .card {
-  background: var(--color-superficie);
-  border-radius: var(--radio-md);
-  box-shadow: var(--sombra-sm);
-  padding: var(--espaciado-lg);
-  margin-bottom: var(--espaciado-lg);
-  border: 1px solid var(--color-borde);
+    background: var(--color-superficie);
+    border-radius: var(--radio-md);
+    box-shadow: var(--sombra-sm);
+    padding: var(--espaciado-lg);
+    margin-bottom: var(--espaciado-lg);
+    border: 1px solid var(--color-borde);
 }
 
 .subseccion {
-  margin-top: var(--espaciado-lg);
-  padding-top: var(--espaciado-md);
-  border-top: 1px dashed var(--color-borde);
+    margin-top: var(--espaciado-lg);
+    padding-top: var(--espaciado-md);
+    border-top: 1px dashed var(--color-borde);
 }
 
 .subseccion h4 {
-  font-size: 0.95rem;
-  color: var(--color-primario);
-  margin-bottom: var(--espaciado-sm);
+    font-family: var(--fuente-display);
+    font-size: 0.95rem;
+    color: var(--color-primario);
+    margin-bottom: var(--espaciado-sm);
 }
 
 .tarjeta {
-  display: flex;
-  align-items: center;
-  gap: var(--espaciado-md);
-  background: var(--color-superficie);
-  border-radius: var(--radio-lg);
-  padding: var(--espaciado-lg);
-  box-shadow: var(--sombra-sm);
-  border-left: 5px solid var(--color-primario);
-  transition: transform var(--transicion-normal), box-shadow var(--transicion-normal);
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-md);
+    background: var(--color-superficie);
+    border-radius: var(--radio-md);
+    padding: var(--espaciado-lg);
+    box-shadow: var(--sombra-sm);
+    border: 1px solid var(--color-borde);
+    border-top: 3px solid var(--color-primario);
+    transition: transform var(--transicion-normal), box-shadow var(--transicion-normal);
 }
 
 .tarjeta:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-md);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-md);
 }
 
 .tarjeta-icono {
-  font-size: 1.8rem;
+    font-size: 1.7rem;
+    color: var(--color-primario);
+    flex-shrink: 0;
 }
 
 .tarjeta-cuerpo {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .tarjeta-valor {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-primario-oscuro);
+    font-family: var(--fuente-mono);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-primario-oscuro);
 }
 
 .tarjeta-etiqueta {
-  font-size: 0.8rem;
-  color: var(--color-texto-suave);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-texto-suave);
 }
 
-.tarjeta-azul { border-left-color: var(--color-primario); }
-.tarjeta-morado { border-left-color: var(--color-primario-claro); }
-.tarjeta-verde { border-left-color: var(--color-exito); }
-.tarjeta-dorado { border-left-color: var(--color-primario); }
-.tarjeta-rojo { border-left-color: var(--color-error); }
-.tarjeta-naranja { border-left-color: var(--color-advertencia); }
+.tarjeta-azul .tarjeta-icono { color: var(--color-primario); }
+.tarjeta-morado .tarjeta-icono { color: #5b4a86; }
+.tarjeta-verde .tarjeta-icono { color: var(--color-exito); }
+.tarjeta-dorado .tarjeta-icono { color: var(--color-dorado-oscuro); }
+.tarjeta-rojo .tarjeta-icono { color: var(--color-error); }
+.tarjeta-naranja .tarjeta-icono { color: var(--color-advertencia); }

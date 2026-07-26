@@ -1,58 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
 :root {
-  /* Paleta cromática corporativa (SaaS premium) */
-  --color-primario: #2563eb;
-  --color-primario-claro: #3b82f6;
-  --color-primario-oscuro: #1d4ed8;
-  --color-dorado: #2563eb;         /* Mapeado a azul de acento para mantener compatibilidad */
-  --color-dorado-claro: #3b82f6;   /* Mapeado a azul claro para mantener compatibilidad */
-  --color-verde-oliva: #2563eb;    /* Mapeado a azul de acento para botones primarios */
-  
-  --color-fondo: #fafafa;
-  --color-superficie: #ffffff;
-  --color-borde: #e5e7eb;
-  --color-borde-input: #d1d5db;
-  --color-texto: #111827;
-  --color-texto-suave: #374151;
-  --color-texto-mutado: #6b7280;
-  --color-fondo-secundario: #f3f4f6;
-  --color-hover-sutil: #f9fafb;
+  /* Paleta institucional: azul marino profundo + dorado ESPE + fondo pergamino */
+  --color-primario: #0a2e4d;
+  --color-primario-claro: #123a5e;
+  --color-primario-oscuro: #05233b;
+  --color-dorado: #c9a227;
+  --color-dorado-claro: #e3c25e;
+  --color-dorado-oscuro: #8f6f16;
+  --color-verde-oliva: #4a5d23;
 
-  /* Sidebar Estructural (Carbón) */
-  --color-sidebar-fondo: #090a0b;
-  --color-sidebar-footer: #050607;
-  --color-sidebar-borde: rgb(255 255 255 / 12%);
+  --color-fondo: #f7f4ec;
+  --color-superficie: #fffefb;
+  --color-borde: #e3ddc9;
+  --color-texto: #241f18;
+  --color-texto-suave: #6b6252;
 
-  /* Estados */
-  --color-exito: #16a34a;
-  --color-exito-fondo: #f0fdf4;
-  --color-exito-borde: #dcfce7;
-  
-  --color-error: #dc2626;
-  --color-error-fondo: #fef2f2;
-  --color-error-borde: #fee2e2;
-  
-  --color-advertencia: #d97706;
-  --color-advertencia-fondo: #fffbeb;
-  --color-advertencia-borde: #fef3c7;
-  
-  --color-info: #2563eb;
-  --color-info-fondo: #f3f4f6;
-  --color-info-borde: #e5e7eb;
+  --color-exito: #1e6b3a;
+  --color-exito-fondo: #e5f1e6;
+  --color-error: #8f2c26;
+  --color-error-fondo: #f7e9e7;
+  --color-advertencia: #93590a;
+  --color-advertencia-fondo: #f7ecda;
+  --color-info: #123a5e;
+  --color-info-fondo: #e5ecf3;
 
-  /* Bordes, Sombras y Radios */
-  --radio-sm: 6px;
-  --radio-md: 10px;
-  --radio-lg: 16px;
-  --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --sombra-md: 0 4px 14px rgba(0, 0, 0, 0.06);
-  --sombra-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
-  
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+
+  --sombra-sm: 0 1px 2px rgba(10, 46, 77, 0.08);
+  --sombra-md: 0 4px 12px rgba(10, 46, 77, 0.1);
+  --sombra-lg: 0 12px 32px rgba(10, 46, 77, 0.16);
+
   --espaciado-xs: 4px;
   --espaciado-sm: 8px;
   --espaciado-md: 16px;
   --espaciado-lg: 24px;
   --espaciado-xl: 32px;
-  --fuente-base: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --fuente-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --fuente-base: "IBM Plex Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  --fuente-mono: "IBM Plex Mono", "Courier New", monospace;
+
   --transicion-rapida: 0.15s ease;
   --transicion-normal: 0.25s ease;
 }

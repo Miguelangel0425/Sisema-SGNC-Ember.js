@@ -9,7 +9,7 @@ export default class AlertasContenedorComponent extends Component {
     <div id="alertas-contenedor">
       {{#each this.alerta.alertas as |a|}}
         <div class="alerta alerta-{{a.tipo}} {{if a.visible 'alerta-visible'}}">
-          <span class="alerta-icono">{{a.icono}}</span>
+          <i class="bi {{a.icono}} alerta-icono"></i>
           <span class="alerta-texto">{{a.mensaje}}</span>
         </div>
       {{/each}}

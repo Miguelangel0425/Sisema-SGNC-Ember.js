@@ -35,14 +35,12 @@ export default class NotaBotonRegistrarComponent extends Component<{
     );
   };
 
-  <template>
+<template>
     {{#if this.mostrar}}
       <div class="card acciones-registro">
-        <button
-          type="button"
-          class="btn btn-primario btn-registrar"
-          {{on "click" this.registrar}}
-        >✔ Registrar nota conceptual</button>
+        <button type="button" class="btn btn-primario btn-registrar" {{on "click" this.registrar}}>
+          <i class="bi bi-check2-circle"></i> Registrar nota conceptual
+        </button>
       </div>
     {{/if}}
   </template>
